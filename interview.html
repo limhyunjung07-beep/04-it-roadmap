@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>6-3 면접 준비</title>
+<style>
+:root{--bg:#f4f6fa;--ink:#1d2433;--muted:#5b6478;--line:#dfe3eb;--navy:#17325e;--sel:#eef3ff;--yel:#f4c430;color-scheme:light}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans KR",system-ui,-apple-system,sans-serif;font-size:15px;line-height:1.55}
+.wrap{max-width:860px;margin:0 auto;padding:14px max(14px,env(safe-area-inset-left,0px)) 40px;display:grid;gap:14px}
+.rain{height:6px;border-radius:3px;background:linear-gradient(90deg,#e53935 0 14.3%,#f57c00 0 28.6%,#f9c80e 0 42.9%,#2e9e48 0 57.1%,#1e7fd8 0 71.4%,#2b3a8c 0 85.7%,#8e3bb0 0)}
+h1{margin:0;font-size:clamp(24px,5.5vw,32px);color:var(--navy);font-weight:900;line-height:1.25}
+.sub{margin:2px 0 0;color:var(--muted);word-break:keep-all}
+.pbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;background:var(--sel);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.pbtn{font:inherit;font-weight:900;font-size:15.5px;cursor:pointer;border-radius:12px;min-height:46px;padding:6px 18px;border:0;background:var(--navy);color:#fff;display:inline-flex;align-items:center;gap:8px;text-decoration:none}
+.pbtn:hover{background:#24467f}
+.pbtn.y{background:var(--yel);color:var(--navy)}
+.pbtn:disabled{opacity:.55;cursor:default}
+.pbtn:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+.pmsg{font-size:14px;color:var(--muted)}
+.sheet{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px;box-shadow:0 6px 24px rgba(23,50,94,.08)}
+.sheet img{display:block;width:100%;height:auto;border-radius:4px}
+.home{display:inline-flex;align-items:center;gap:6px;background:var(--navy);color:#fff;font-weight:700;text-decoration:none;border-radius:99px;padding:6px 16px 6px 12px;min-height:44px;justify-self:start}
+.pbtn.w{background:#fff;color:var(--navy);border:1.5px solid #b9c7e6}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="home" href="./">🏠 홈 · 진로·진학 로드맵</a>
+  <div class="rain" aria-hidden="true"></div>
+  <div>
+    <h1>6-3 면접 준비</h1>
+    <p class="sub">STEP 6 실행 준비 · 언어적·비언어적 표현, 예상 질문, 질문 유형별 답변 틀 메모까지 3장으로 준비해 보세요.</p>
+  </div>
+  <div class="pbar">
+    <a class="pbtn" href="interview.pdf" download="고입_면접준비.pdf">🖨️ 면접 준비 PDF 내려받기 (3장)</a>
+  </div>
+  <div class="sheet"><img src="interview-1.jpg" width="1080" height="1529" alt="면접, 말 한마디가 인상을 바꿔요 (앞면·언어적 표현). 고입 면접 진행 방식, 삼갈 표현과 바꿀 표현, 면접 화법, 1분 자기소개 틀." loading="lazy"></div>
+  <div class="sheet"><img src="interview-2.jpg" width="1080" height="1529" alt="말하지 않아도 보이는 것들 (뒷면·비언어적 표현). 시선·자세·표정·용모와 복장·제스처·목소리, 고입 면접 예상 질문, 면접 직전 셀프 체크." loading="lazy"></div>
+  <div class="sheet"><img src="interview-3.jpg" width="1080" height="1529" alt="질문 유형별 답변 틀 메모 (셋째 장). 자기주도학습, 지원 동기·진로, 인성, 학과·진로, 가치 판단, 학교생활, 서류 확인, 불리한 기록 유형별 답변 틀." loading="lazy"></div>
+</div>
+</body>
+</html>
