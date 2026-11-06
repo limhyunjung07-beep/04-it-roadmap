@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>진로·진학 로드맵</title>
+<style>
+:root{--bg:#f4f6fa;--ink:#1d2433;--muted:#5b6478;--line:#dfe3eb;--navy:#17325e;--sel:#eef3ff;--yel:#f4c430;color-scheme:light}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans KR",system-ui,-apple-system,sans-serif;font-size:15px;line-height:1.55}
+.wrap{max-width:860px;margin:0 auto;padding:14px max(14px,env(safe-area-inset-left,0px)) 40px;display:grid;gap:14px}
+.rain{height:6px;border-radius:3px;background:linear-gradient(90deg,#e53935 0 14.3%,#f57c00 0 28.6%,#f9c80e 0 42.9%,#2e9e48 0 57.1%,#1e7fd8 0 71.4%,#2b3a8c 0 85.7%,#8e3bb0 0)}
+h1{margin:0;font-size:clamp(24px,5.5vw,32px);color:var(--navy);font-weight:900;line-height:1.25}
+.sub{margin:2px 0 0;color:var(--muted);word-break:keep-all}
+.pbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;background:var(--sel);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.pbtn{font:inherit;font-weight:900;font-size:15.5px;cursor:pointer;border-radius:12px;min-height:46px;padding:6px 18px;border:0;background:var(--navy);color:#fff;display:inline-flex;align-items:center;gap:8px;text-decoration:none}
+.pbtn:hover{background:#24467f}
+.pbtn.y{background:var(--yel);color:var(--navy)}
+.pbtn:disabled{opacity:.55;cursor:default}
+.pbtn:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+.pmsg{font-size:14px;color:var(--muted)}
+.sheet{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px;box-shadow:0 6px 24px rgba(23,50,94,.08)}
+.sheet img{display:block;width:100%;height:auto;border-radius:4px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="rain" aria-hidden="true"></div>
+  <div>
+    <h1>진로·진학 로드맵</h1>
+    <p class="sub">길을 따라 STEP 1부터 7까지 한 단계씩 나의 진로를 설계해요. 각 단계 자료는 단계별 바로가기에서 열 수 있어요.</p>
+  </div>
+  <div class="pbar">
+    <a class="pbtn y" href="./">🧭 단계별 바로가기 열기</a>
+    <a class="pbtn" href="roadmap.pdf" download="진로진학_로드맵.pdf">🖨️ 로드맵 PDF 내려받기</a>
+  </div>
+  <div class="sheet"><img src="roadmap.jpg" width="1818" height="2573" alt="진로·진학 로드맵. 도로를 따라 STEP 1 발견(자기 이해: 직업흥미·적성·가치관 검사), STEP 2 계획(학습 설계: 학습습관 자가진단·학습 플래너), STEP 3 탐색(직업 탐색: 직업정보·커리어패스·진로동영상), STEP 4 연결(학과 탐색: 고등학교·대학교 학과정보, 학교정보·학과인터뷰), STEP 5 선택(고입 설계: 고등학교 탐색기·고입정보포털·입학전학 포털·하이파이브), STEP 6 준비(실행 준비: 입학준비·자기소개서·면접 준비·모의면접기), STEP 7 도약(미래 확장: 경기고교학점제·학교별 교육과정·진로·학업 설계·학업설계기)으로 이어지고, 끝에 '나의 꿈을 향해!'와 수원희망등대가 표시되어 있어요."></div>
+</div>
+</body>
+</html>

@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>진로 챗봇 · 탐색하고 싶은 직업 찾기</title>
+<style>
+:root{--navy:#14213d;--navy2:#1f3a68;--yel:#f4c430;--yel-soft:#fff6d6;--red:#e53935;--ink:#1d2433;--muted:#667085;--line:#dbe3ef;--bg:#f3f6fb;--blue-soft:#e8eefb;--green:#2e9d5b}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:"Pretendard","Noto Sans KR","Malgun Gothic","Apple SD Gothic Neo",sans-serif;color:var(--ink);background:var(--bg);font-size:15px}
+button{font-family:inherit;cursor:pointer}
+.app{max-width:820px;margin:0 auto;height:100%;display:flex;flex-direction:column;background:#fff;box-shadow:0 0 0 1px var(--line)}
+header{background:linear-gradient(110deg,var(--navy) 0%,var(--navy2) 100%);color:#fff;padding:14px 18px;display:flex;align-items:center;gap:12px;position:relative}
+header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:5px;background:linear-gradient(90deg,#f57c00 0 16.6%,#f4c430 16.6% 33.3%,#2e9d5b 33.3% 50%,#1e88e5 50% 66.6%,#283593 66.6% 83.3%,#8e44ad 83.3%)}
+.logo{width:42px;height:42px;border-radius:50%;background:var(--yel);display:grid;place-items:center;font-size:22px;flex:none}
+header h1{margin:0;font-size:19px;letter-spacing:-.3px}
+header h1 b{color:var(--yel)}
+header p{margin:2px 0 0;font-size:12.5px;color:#cfdaf5}
+.hbtn{margin-left:auto;display:flex;gap:6px}
+.hbtn button{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:6px 11px;font-size:12.5px}
+.hbtn .hl{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:6px 11px;font-size:12.5px;text-decoration:none;display:inline-flex;align-items:center}
+.hbtn .hl[hidden]{display:none}
+.hbtn button:hover{background:rgba(255,255,255,.22)}
+#chat{flex:1;overflow-y:auto;padding:18px 14px 8px;scroll-behavior:smooth}
+.row{display:flex;gap:8px;margin:0 0 12px;align-items:flex-start}
+.row.me{justify-content:flex-end}
+.av{width:32px;height:32px;border-radius:50%;background:var(--navy);color:var(--yel);display:grid;place-items:center;font-size:16px;flex:none}
+.bub{max-width:86%;padding:11px 14px;border-radius:16px;line-height:1.6;white-space:pre-wrap;word-break:keep-all}
+.bot .bub{background:var(--blue-soft);border-top-left-radius:4px}
+.me .bub{background:var(--yel);border-top-right-radius:4px;font-weight:600}
+.bub b.k{color:var(--navy2)}
+.bub .red{color:var(--red);font-weight:700}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0 2px;white-space:normal}
+.chip{border:1.5px solid #b9c7e6;background:#fff;color:var(--navy2);border-radius:999px;padding:7px 12px;font-size:14px;font-weight:600;line-height:1.3;text-align:left}
+.chip small{display:block;font-weight:400;color:var(--muted);font-size:11.5px}
+.chip:hover{border-color:var(--navy2)}
+.chip.on{background:var(--navy2);color:#fff;border-color:var(--navy2)}
+.chip.on small{color:#dbe4ff}
+.chip.go{background:var(--yel);border-color:#e0b21c;color:var(--navy)}
+.chip.ghost{border-style:dashed;color:var(--muted)}
+.chip:disabled{opacity:.45;cursor:default}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin:10px 0 4px;white-space:normal}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 12px 10px;position:relative}
+.card.gold{border:2px solid var(--yel);background:var(--yel-soft)}
+.card h4{margin:0 0 2px;font-size:16px;display:flex;align-items:center;gap:6px}
+.card .rk{width:22px;height:22px;border-radius:50%;background:var(--navy);color:var(--yel);font-size:12px;display:grid;place-items:center;flex:none}
+.card .pct{margin-left:auto;font-size:12.5px;color:var(--green);font-weight:800}
+.bar{height:6px;border-radius:9px;background:#edf1f7;overflow:hidden;margin:6px 0}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--yel),#f57c00)}
+.card p{margin:4px 0;font-size:13px;color:#3b4459;line-height:1.5}
+.tags{display:flex;flex-wrap:wrap;gap:4px;margin:5px 0}
+.tag{font-size:11.5px;border-radius:6px;padding:2px 6px;background:#eef2fa;color:var(--navy2)}
+.tag.g{background:#fff0b3;color:#7a5a00;font-weight:700}
+.tag.m{background:#e3f4ea;color:#1e7046}
+.cbtn{display:flex;gap:6px;margin-top:8px}
+.cbtn button{flex:1;border:1px solid var(--line);background:#fff;border-radius:9px;padding:6px 4px;font-size:12.5px;font-weight:600;color:var(--navy2)}
+.cbtn button.pick{background:var(--navy2);color:#fff;border-color:var(--navy2)}
+.cbtn button.picked{background:var(--yel);color:var(--navy);border-color:#e0b21c}
+.detail{background:#fff;border-radius:12px;border:1px solid var(--line);padding:12px 14px;margin-top:8px;white-space:normal}
+.detail h3{margin:0 0 6px;font-size:17px}
+.detail dl{display:grid;grid-template-columns:76px 1fr;gap:5px 8px;margin:0;font-size:13.5px}
+.detail dt{color:var(--muted);font-weight:700}
+.detail dd{margin:0}
+.detail a{color:var(--navy2);font-weight:700}
+footer{border-top:1px solid var(--line);padding:10px;background:#fff}
+.picks{display:flex;gap:6px;align-items:center;margin-bottom:8px;font-size:12.5px;flex-wrap:wrap}
+.picks .lb{font-weight:800;color:var(--navy)}
+.pk{border-radius:999px;padding:4px 10px;background:#f1f4f9;color:var(--muted);border:1px dashed #c6d1e3}
+.pk.on{background:var(--yel-soft);color:var(--navy);border:1px solid #e9cf72;font-weight:700}
+.pk b{margin-right:3px}
+.pk .x{margin-left:4px;color:#a0a8b8;cursor:pointer}
+.inrow{display:flex;gap:8px}
+#msg{flex:1;border:1.5px solid #c9d4e6;border-radius:12px;padding:11px 13px;font-size:15px;font-family:inherit;outline:none}
+#msg:focus{border-color:var(--navy2)}
+#send{background:var(--navy2);color:#fff;border:0;border-radius:12px;padding:0 18px;font-weight:700;font-size:15px}
+.note{font-size:11.5px;color:var(--muted);margin-top:6px;text-align:center}
+.sum{background:#fff;border:2px solid var(--navy);border-radius:14px;padding:14px;margin-top:8px;white-space:normal}
+.sum h3{margin:0 0 8px;font-size:17px;color:var(--navy)}
+.sum table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0}
+.sum th,.sum td{border:1px solid #cfd8e6;padding:6px 8px;text-align:left;vertical-align:top}
+.sum th{background:#eef2fa;width:120px;color:var(--navy)}
+.sum .rank th{background:var(--yel);text-align:center;width:auto}
+.sum .rank td{text-align:center;font-weight:700;height:38px}
+.final{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap}
+.final label{font-weight:800;color:var(--navy)}
+.final select,.final textarea{font-family:inherit;font-size:14px;border:1.5px solid #c9d4e6;border-radius:10px;padding:7px 9px}
+.final textarea{width:100%;min-height:58px}
+.acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.acts button{border:0;border-radius:10px;padding:9px 12px;font-weight:700;font-size:13.5px;background:var(--navy2);color:#fff}
+.acts button.y{background:var(--yel);color:var(--navy)}
+.acts button.w{background:#fff;color:var(--navy2);border:1.5px solid #b9c7e6}
+.toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:9px 16px;border-radius:999px;font-size:13.5px;opacity:0;transition:.25s;pointer-events:none;z-index:9}
+.toast.show{opacity:1}
+#printArea{display:none}
+@media (max-width:560px){header h1{font-size:16px}header p{display:none}.hbtn button{padding:5px 8px;font-size:11.5px}.bub{max-width:92%}}
+@media print{
+  @page{size:A4;margin:14mm}
+  body{background:#fff}
+  .app{display:none}
+  #printArea{display:block;font-size:12.5pt;color:#111}
+  #printArea h1{font-size:18pt;margin:0 0 4px;color:var(--navy)}
+  #printArea .sub{color:#555;margin-bottom:12px}
+  #printArea table{width:100%;border-collapse:collapse;margin:8px 0 14px}
+  #printArea th,#printArea td{border:1px solid #999;padding:7px 9px;text-align:left;vertical-align:top}
+  #printArea th{background:#eef2fa;width:30%}
+  #printArea h2{font-size:13.5pt;margin:14px 0 4px;color:var(--navy2)}
+  #printArea .rank th{text-align:center;background:#f4c430;width:auto}
+  #printArea .rank td{text-align:center;font-weight:700;height:34px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="logo">🧭</div>
+    <div>
+      <h1>진로 챗봇 · <b>탐색하고 싶은 직업</b> 찾기</h1>
+      <p>진로심리검사 결과를 입력하면 나에게 맞는 직업을 함께 찾아요</p>
+    </div>
+    <div class="hbtn"><a id="bHome" class="hl" href="./" hidden>🏠 홈</a><a id="bDl" class="hl" href="chatbot.html" download="진로챗봇_탐색하고싶은직업.html" hidden>📥 내려받기</a><button id="bSum">📋 결과 정리</button><button id="bReset">↺ 처음부터</button></div>
+  </header>
+  <div id="chat"></div>
+  <footer>
+    <div class="picks" id="picks"></div>
+    <div class="inrow">
+      <input id="msg" placeholder="궁금한 직업이나 관심 분야를 입력해 보세요 (예: 동물, 컴퓨터, 디자인)" autocomplete="off">
+      <button id="send">보내기</button>
+    </div>
+    <div class="note">인터넷 없이도 작동해요 · 입력한 내용은 이 컴퓨터(브라우저)에만 저장돼요</div>
+  </footer>
+</div>
+<div id="printArea"></div>
+<div class="toast" id="toast"></div>
+<script>
+// 이름|흥미코드|적성|가치|하는 일|관련 학과|검색어
+const JOB_SRC=`자동차정비원|RC|hand,space,math|stable,ability|자동차를 점검하고 고장 난 부분을 고친다|자동차과, 자동차공학과|자동차,기계,차,정비
+전기기술자|RI|hand,math,space|stable,pay|건물과 설비의 전기 시설을 설치하고 관리한다|전기과, 전기공학과|전기,기계,에너지
+항공기정비원|RI|hand,space,math|stable,ability|항공기를 점검·정비해 안전한 비행을 돕는다|항공정비과, 항공기계공학과|비행기,항공,기계,정비
+요리사|RA|hand,crea,body|creat,ability|새로운 음식을 연구하고 조리한다|조리과학과, 외식조리과|요리,음식,식당
+제과제빵사|RA|hand,crea,art|creat,auto|빵과 과자, 디저트를 만든다|제과제빵과, 식품조리과|빵,요리,음식,디저트
+바리스타|RA|hand,people|auto,creat|커피를 추출하고 음료를 만든다|바리스타과, 외식산업과|커피,음식,카페
+운동선수|RS|body,self|ability,recog|운동 종목에서 훈련하고 경기에 나선다|체육학과, 사회체육과|운동,스포츠,체육
+경찰관|RS|body,people|serve,stable|범죄를 예방하고 시민의 안전을 지킨다|경찰행정학과|안전,경찰,법,공무원
+소방관|RS|body,people|serve,stable|불을 끄고 위험에 처한 사람을 구조한다|소방안전관리과, 소방행정학과|안전,구조,공무원
+직업군인|RE|body,people,space|serve,stable|나라를 지키기 위해 군에서 근무한다|군사학과, 국방기술학과|군인,안전,공무원
+드론조종사|RI|hand,space|creat,ability|드론을 조종해 촬영·방제·측량을 한다|드론학과, 항공운항과|드론,비행기,기계
+로봇공학기술자|RI|math,space,crea|creat,ability|로봇을 설계·제작하고 움직임을 제어한다|로봇공학과, 기계공학과|로봇,기계,AI,인공지능,만들기
+건축가|AR|space,art,crea,math|creat,recog|건물을 설계하고 짓는 과정을 관리한다|건축학과|건축,디자인,집,건물
+인테리어디자이너|AE|art,space,crea|creat,auto|실내 공간을 아름답고 편리하게 꾸민다|실내디자인학과|디자인,인테리어,집,공간
+조경기술자|RA|nature,space,art|creat,stable|공원과 정원 같은 녹지 공간을 설계·조성한다|조경학과|자연,식물,환경
+스마트팜전문가|RI|nature,math,hand|stable,serve|스마트 기술로 농작물을 기르고 연구한다|스마트팜과, 농학과|농업,식물,자연,스마트팜
+수의사|IR|nature,math,people|serve,ability|동물의 질병을 진단하고 치료한다|수의예과|동물,의료,반려동물
+반려동물훈련사|RS|nature,people,body|serve,auto|반려동물의 행동을 교정하고 훈련한다|반려동물과, 애완동물관리과|동물,반려동물
+사육사|RS|nature,body|serve,stable|동물원 등에서 동물을 돌보고 관리한다|동물자원학과|동물,자연
+플로리스트|AR|art,hand,nature|creat,auto|꽃으로 장식물을 디자인한다|화훼디자인과|꽃,식물,디자인
+가구디자이너|RA|hand,space,art|creat,auto|나무 등으로 가구를 디자인하고 만든다|가구디자인과, 목공과|만들기,가구,디자인
+헤어디자이너|AS|hand,art,people|creat,auto|머리 모양을 디자인하고 관리한다|미용과, 뷰티아트과|미용,뷰티,패션
+메이크업아티스트|AS|hand,art,people|creat,auto|화장으로 사람과 캐릭터를 표현한다|뷰티아트과|미용,뷰티,패션
+기계공학기술자|RI|math,space|ability,pay|기계와 장비를 설계·개발한다|기계공학과|기계,만들기
+반도체공학기술자|IR|math,space|pay,ability|반도체 소자와 생산 공정을 개발한다|반도체공학과, 전자공학과|반도체,전자,컴퓨터
+전자공학기술자|IR|math,space,hand|pay,ability|전자 제품과 회로를 설계한다|전자공학과|전자,컴퓨터,기계
+용접원|RC|hand,body|stable,pay|금속을 녹여 붙여 배·건물·기계를 만든다|용접과, 기계과|기계,만들기
+항공기조종사|RI|space,body,math|recog,pay|비행기를 조종해 승객과 화물을 나른다|항공운항학과|비행기,항공,여행
+철도기관사|RC|space,body|stable,pay|열차를 안전하게 운전한다|철도운전시스템과|기차,교통
+항해사|RI|space,body,math|pay,auto|선박을 운항하고 관리한다|해양운항학과|바다,배
+프로게이머|RA|hand,crea,self|recog,pay|게임 대회에 선수로 참가한다|e스포츠과|게임,스포츠
+소프트웨어개발자|IC|math,crea,self|creat,grow|컴퓨터 프로그램과 앱을 만든다|컴퓨터공학과, 소프트웨어학과|컴퓨터,코딩,프로그래밍,앱,AI,IT
+인공지능전문가|IR|math,crea|creat,grow|인공지능 모델을 연구·개발한다|인공지능학과, 컴퓨터공학과|AI,인공지능,컴퓨터,코딩,IT
+데이터과학자|IC|math,lang|grow,ability|데이터를 분석해 의미 있는 정보를 찾는다|통계학과, 데이터사이언스학과|데이터,수학,컴퓨터,AI,IT
+정보보안전문가|IC|math,self|stable,ability|해킹 같은 위협으로부터 정보를 지킨다|정보보호학과|보안,해킹,컴퓨터,IT
+게임프로그래머|IA|math,crea|creat,auto|게임이 작동하도록 프로그램을 만든다|게임공학과|게임,컴퓨터,코딩,IT
+웹개발자|IC|math,crea|auto,grow|웹사이트와 웹 서비스를 만든다|컴퓨터공학과|컴퓨터,코딩,웹,IT
+가상현실전문가|IA|crea,math,art|creat,grow|가상현실·증강현실 콘텐츠를 만든다|가상현실학과, 컴퓨터공학과|게임,컴퓨터,메타버스,VR,IT
+의사|IS|math,lang,people|serve,recog|질병을 진단하고 치료한다|의예과|의료,병원,건강
+간호사|SI|people,body,math|serve,stable|환자를 돌보고 치료를 돕는다|간호학과|의료,병원,건강
+약사|IC|math,self|stable,serve|약을 조제하고 복용 방법을 안내한다|약학과|약,의료,건강
+물리치료사|SR|body,people|serve,stable|운동과 기구로 몸의 기능 회복을 돕는다|물리치료학과|의료,건강,운동,재활
+임상병리사|IC|math,hand|stable,serve|혈액 등 검사로 질병 진단을 돕는다|임상병리학과|의료,병원,과학
+생명과학연구원|IR|math,nature|grow,ability|생명 현상을 실험하고 연구한다|생명과학과|과학,생명,실험
+화학연구원|IR|math,hand|grow,ability|새로운 물질을 연구·개발한다|화학과, 화학공학과|과학,실험,화학
+환경공학기술자|IR|nature,math|serve,grow|환경 오염을 줄이는 기술을 개발한다|환경공학과|환경,자연,과학
+기상연구원|IR|math,nature|grow,stable|날씨를 관측·분석하고 예측한다|대기과학과|날씨,과학,자연
+천문학연구원|IR|math,space|grow,auto|우주와 별을 관측하고 연구한다|천문우주학과|우주,과학,별
+항공우주공학기술자|IR|math,space|creat,recog|항공기와 우주선을 설계한다|항공우주공학과|우주,비행기,기계
+신재생에너지전문가|IR|math,nature|serve,creat|태양광·풍력 같은 친환경 에너지를 개발한다|에너지공학과|환경,에너지,과학
+식품공학기술자|IR|math,nature|stable,creat|새로운 식품을 개발하고 품질을 관리한다|식품공학과|음식,과학
+과학수사요원|IR|math,self|serve,stable|과학적 방법으로 범죄 증거를 분석한다|과학수사학과, 경찰행정학과|경찰,과학,법
+경제학연구원|IE|math,lang|grow,auto|경제 현상을 분석하고 연구한다|경제학과|경제,돈,금융
+역사학연구원|IA|lang,self|grow,auto|역사 자료를 찾아 연구한다|사학과|역사,책
+웹툰작가|AE|art,crea,lang|creat,auto|웹툰을 기획하고 그린다|만화애니메이션과|그림,웹툰,만화
+일러스트레이터|AR|art,crea|creat,auto|그림으로 생각과 메시지를 표현한다|시각디자인과, 회화과|그림,디자인,미술
+애니메이터|AR|art,crea,space|creat,auto|움직이는 그림과 애니메이션을 만든다|애니메이션과|그림,애니메이션,영상
+시각디자이너|AE|art,crea|creat,recog|포스터·로고 같은 시각물을 디자인한다|시각디자인과|디자인,그림,미술
+패션디자이너|AE|art,crea,hand|creat,recog|옷과 패션 소품을 디자인한다|패션디자인과|패션,옷,디자인
+제품디자이너|AR|art,space,crea|creat,ability|생활 제품의 모양과 기능을 디자인한다|산업디자인과|디자인,만들기
+UX·UI디자이너|AI|art,crea,people|creat,grow|앱과 웹 화면을 쓰기 편하게 디자인한다|디지털디자인과|디자인,앱,컴퓨터,IT
+게임그래픽디자이너|AR|art,crea|creat,auto|게임 속 캐릭터와 배경을 디자인한다|게임그래픽과|게임,그림,디자인
+영상크리에이터|AE|art,crea,lang|creat,auto|영상을 기획·촬영·편집해 콘텐츠를 만든다|방송영상과, 영상디자인과|영상,유튜브,미디어,방송
+사진작가|AR|art,space|creat,auto|사진으로 장면과 메시지를 기록한다|사진영상학과|사진,영상,미술
+가수|AS|music,body,people|recog,creat|노래로 감정과 메시지를 전한다|실용음악과|음악,노래,연예
+작곡가|AI|music,crea|creat,auto|음악을 만든다|작곡과, 실용음악과|음악,노래
+연주자|AR|music,hand|ability,creat|악기를 연주한다|기악과|음악,악기
+배우|AS|lang,body,people|recog,creat|연기로 인물을 표현한다|연극영화과|연기,연예,영화,방송
+댄서|AR|body,music,art|creat,ability|춤으로 감정과 이야기를 표현한다|무용과, 실용댄스과|춤,운동,연예
+작가|AI|lang,crea,self|creat,auto|소설·에세이 같은 글을 쓴다|문예창작과, 국어국문학과|글쓰기,책
+방송작가|AE|lang,crea,people|creat,grow|방송 프로그램의 구성과 대본을 쓴다|문예창작과, 미디어학과|방송,글쓰기,미디어
+방송PD|AE|crea,people,lang|creat,recog|방송·영상 프로그램을 기획·제작한다|신문방송학과|방송,영상,미디어
+기자|AE|lang,people|recog,serve|사건을 취재하고 기사를 쓴다|신문방송학과, 미디어학과|글쓰기,미디어,뉴스
+큐레이터|AS|art,lang|grow,creat|전시를 기획하고 작품을 관리한다|미술사학과, 박물관학과|미술,전시,역사
+게임기획자|AE|crea,lang,math|creat,auto|게임의 규칙과 스토리를 기획한다|게임기획과|게임
+공연기획자|EA|people,crea|creat,recog|공연을 기획하고 운영한다|공연기획과, 문화예술경영과|공연,음악,연예
+통역사·번역가|AS|lang,self|auto,ability|다른 언어로 말과 글을 옮긴다|통번역학과, 외국어학과|외국어,영어,글쓰기
+캐릭터디자이너|AE|art,crea|creat,auto|캐릭터를 만들고 상품으로 개발한다|캐릭터디자인과|그림,캐릭터,디자인
+초등학교교사|SA|people,lang|serve,stable|초등학생을 가르치고 생활을 지도한다|초등교육과|교육,아이,선생님
+중등교사|SI|people,lang|serve,stable|중·고등학생에게 교과를 가르친다|사범대학 각 교육과|교육,선생님
+유치원교사|SA|people,art,music|serve,stable|유아의 놀이와 성장을 돕는다|유아교육과|아이,교육,선생님
+특수교사|SE|people,self|serve,stable|장애가 있는 학생의 배움을 돕는다|특수교육과|교육,봉사,선생님
+사회복지사|SE|people,self|serve,stable|도움이 필요한 사람에게 복지 서비스를 연결한다|사회복지학과|봉사,복지
+상담심리전문가|SI|people,self,lang|serve,grow|마음이 힘든 사람의 이야기를 듣고 상담한다|심리학과, 상담심리학과|심리,상담,마음
+청소년지도사|SE|people,body|serve,grow|청소년 활동을 기획하고 지도한다|청소년지도학과|청소년,교육
+응급구조사|SR|body,people|serve,stable|응급 환자를 처치하고 병원으로 옮긴다|응급구조학과|의료,구조,안전
+작업치료사|SR|people,hand|serve,stable|일상 활동으로 재활을 돕는다|작업치료학과|의료,재활
+언어치료사|SA|lang,people|serve,stable|말과 언어 발달의 어려움을 치료한다|언어치료학과|의료,말
+치위생사|SC|hand,people|stable,serve|치아 질환 예방과 치과 진료를 돕는다|치위생과|의료
+스포츠트레이너|SR|body,people|grow,auto|운동 방법을 지도하고 체력 관리를 돕는다|생활체육과, 운동처방학과|운동,스포츠,건강
+항공기객실승무원|SE|people,lang,body|recog,pay|항공기 승객의 안전과 서비스를 책임진다|항공서비스과|비행기,여행,외국어,서비스
+관광가이드|SE|people,lang|auto,grow|여행객에게 관광지를 안내한다|관광학과|여행,외국어
+보육교사|SA|people,music|serve,stable|어린이집에서 영유아를 돌본다|아동보육과|아이,교육
+영양사|SI|math,people|serve,stable|건강한 식단을 짜고 급식을 관리한다|식품영양학과|음식,건강
+호텔리어|SE|people,lang|recog,grow|호텔에서 고객 서비스를 담당한다|호텔경영학과|여행,서비스
+직업상담사|SE|people,lang|serve,grow|사람들의 진로와 취업을 상담한다|상담학과, 교육학과|상담,진로
+기업경영자|EC|people,lang,math|recog,pay|회사를 이끌고 중요한 결정을 내린다|경영학과|경영,창업,돈,리더
+창업가|EA|crea,people|auto,creat|새로운 아이디어로 회사를 세운다|경영학과, 창업학과|창업,경영,리더
+마케터|EA|crea,lang,people|creat,ability|상품을 알리고 판매 전략을 세운다|경영학과, 광고홍보학과|광고,마케팅,경영
+광고기획자|EA|crea,lang|creat,recog|광고 아이디어를 기획한다|광고홍보학과|광고,미디어
+변호사|ES|lang,people,self|recog,pay|법률 문제를 상담하고 소송을 대리한다|법학과, 법학전문대학원|법
+판사·검사|EI|lang,self|recog,serve|법에 따라 재판하거나 범죄를 수사·기소한다|법학과, 법학전문대학원|법,공무원
+외교관|ES|lang,people|recog,serve|외국과의 관계에서 나라를 대표한다|정치외교학과|외국어,외교,영어,공무원
+행정공무원|CE|lang,people|stable,serve|국가·지방자치단체의 행정 업무를 한다|행정학과|공무원,안정
+아나운서|ES|lang,people|recog,creat|방송에서 뉴스와 프로그램을 진행한다|신문방송학과|방송,말,미디어
+쇼호스트|ES|lang,people|pay,recog|방송에서 상품을 소개하고 판매한다|방송연예과|방송,판매,말
+스포츠에이전트|ES|people,lang,body|pay,auto|선수의 계약과 활동을 관리한다|스포츠경영학과|스포츠,운동,경영
+여행상품개발자|EA|crea,lang|creat,auto|새로운 여행 상품을 기획한다|관광경영학과|여행
+연예기획자|ES|people,crea|recog,pay|연예인의 활동을 기획·관리한다|엔터테인먼트경영과|연예,음악
+정치인|ES|lang,people|recog,serve|정책을 만들고 국민을 대표한다|정치외교학과|정치,리더
+회계사|CI|math,self|pay,stable|기업의 재무 상태를 검토하고 회계 업무를 한다|회계학과, 경영학과|돈,회계,수학
+세무사|CE|math,self|pay,stable|세금 신고를 대신하고 상담한다|세무학과|돈,세금
+은행원|CE|math,people|stable,pay|예금·대출 같은 금융 업무를 한다|금융학과, 경영학과|돈,금융,은행
+사서|CS|lang,self|stable,grow|도서관 자료를 관리하고 이용을 돕는다|문헌정보학과|책,도서관
+물류관리사|CE|math,space|stable,pay|상품의 보관과 운송 과정을 관리한다|물류학과|물류,유통
+보건의료정보관리사|CI|math,self|stable,serve|진료 기록을 관리하고 분석한다|보건행정학과|의료,데이터
+품질관리원|CR|math,self|stable,ability|제품이 기준에 맞게 만들어졌는지 검사한다|산업공학과|제조,기계`;
+
+const TYPES={R:["현실형","손·몸을 써서 만들고 고치는 활동"],I:["탐구형","궁금한 것을 관찰하고 분석하는 활동"],A:["예술형","상상하고 표현하는 창의적인 활동"],S:["사회형","사람을 돕고 가르치는 활동"],E:["진취형","이끌고 설득하고 도전하는 활동"],C:["관습형","정리하고 계획대로 꼼꼼히 하는 활동"]};
+const ABIL={body:"신체·운동능력",hand:"손재능",space:"공간지각력",music:"음악능력",crea:"창의력",lang:"언어능력",math:"수리·논리력",self:"자기성찰능력",people:"대인관계능력",nature:"자연친화력",art:"예술시각능력"};
+const VALS={ability:"능력발휘",auto:"자율성",pay:"보수",stable:"안정성",recog:"사회적 인정",serve:"사회봉사",grow:"자기계발",creat:"창의성"};
+const JOBS=JOB_SRC.trim().split("\n").map(l=>{const [name,code,ab,va,desc,major,kw]=l.split("|");return {name,code,ab:ab.split(","),va:va.split(","),desc,major,kw:kw.split(",")};});
+const KEY="jobbot_v1";
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const norm=s=>String(s||"").replace(/[\s·.,()\-_/]/g,"").toLowerCase();
+function blank(){return {step:"grade",grade:"",t1:"",t2:"",intJobs:[],abil:[],low:"",aptJobs:[],vals:[],valJobs:[],picks:[],final:"",reason:"",shown:0,log:[]};}
+let S=blank();
+function load(){try{const v=JSON.parse(localStorage.getItem(KEY)||"null");if(v&&v.step)S=Object.assign(blank(),v);}catch(e){}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+function toast(t){const el=$("toast");el.textContent=t;el.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove("show"),1800);}
+const chat=$("chat");
+function scroll(){setTimeout(()=>{chat.scrollTop=chat.scrollHeight;},30);}
+function addMe(t,log=true){const r=document.createElement("div");r.className="row me";r.innerHTML=`<div class="bub">${esc(t)}</div>`;chat.appendChild(r);if(log){S.log.push(["me",t]);}scroll();}
+function addBot(html,extra){const r=document.createElement("div");r.className="row bot";r.innerHTML=`<div class="av">🧭</div><div class="bub">${html}</div>`;const b=r.querySelector(".bub");if(extra)b.appendChild(extra);chat.appendChild(r);scroll();return b;}
+function el(tag,cls,html){const e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e;}
+function chipRow(items,onPick){const w=el("div","chips");items.forEach(it=>{const b=el("button","chip"+(it.cls?" "+it.cls:""),esc(it.label)+(it.sub?`<small>${esc(it.sub)}</small>`:""));b.onclick=()=>{w.querySelectorAll("button").forEach(x=>x.disabled=true);b.classList.add("on");onPick(it);};w.appendChild(b);});return w;}
+function multiRow(items,max,onDone,doneLabel){const w=el("div","chips");const sel=new Set();const done=el("button","chip go","✔ "+(doneLabel||"다 골랐어요"));
+  items.forEach(it=>{const b=el("button","chip",esc(it.label));b.onclick=()=>{if(sel.has(it.key)){sel.delete(it.key);b.classList.remove("on");}else{if(sel.size>=max){toast(`${max}개까지 고를 수 있어요`);return;}sel.add(it.key);b.classList.add("on");}const order=[...sel];w.querySelectorAll(".chip:not(.go)").forEach(x=>{const k=x.dataset.k;const i=order.indexOf(k);x.innerHTML=esc(items.find(z=>z.key===k).label)+(i>=0?` <b>${i+1}</b>`:"");});};b.dataset.k=it.key;w.appendChild(b);});
+  done.onclick=()=>{if(!sel.size){toast("하나 이상 골라 주세요");return;}w.querySelectorAll("button").forEach(x=>x.disabled=true);onDone([...sel]);};w.appendChild(done);return w;}
+function splitJobs(t){return String(t||"").split(/[,，、\/\n]|그리고|및/).map(x=>x.trim()).filter(x=>x&&x.length<=20&&!/^(없|모르|건너)/.test(x));}
+
+/* ---------- 질문 흐름 ---------- */
+let waitText=null; // 글자 입력을 기다리는 단계
+function ask(step){
+  S.step=step;save();waitText=null;
+  if(step==="grade"){
+    addBot(`안녕하세요! 저는 <b class="k">진로 챗봇</b>이에요. 🧭\n진로심리검사 3가지(<b class="k">직업흥미검사(H)·직업적성검사·직업가치관검사</b>) 결과를 알려 주면, 결과가 겹치는 <span class="red">황금 지점</span>을 찾아 탐색할 직업을 추천해 줄게요.\n\n검사 결과지를 옆에 펼쳐 두고 시작해요. 먼저, 몇 학년인가요?`,
+      chipRow(["1학년","2학년","3학년"].map(x=>({label:x})),it=>{S.grade=it.label;addMe(it.label);ask("t1");}));
+  }else if(step==="t1"){
+    addBot(`<b class="k">01 직업흥미검사(H)</b>\n일반 흥미 유형에서 <b>1순위</b>로 나온 유형은 무엇인가요?`,
+      chipRow(Object.entries(TYPES).map(([k,v])=>({label:v[0],sub:v[1],key:k})),it=>{S.t1=it.key;addMe("1순위: "+it.label);ask("t2");}));
+  }else if(step==="t2"){
+    addBot(`<b>2순위</b> 유형은 무엇인가요?`,
+      chipRow(Object.entries(TYPES).filter(([k])=>k!==S.t1).map(([k,v])=>({label:v[0],sub:v[1],key:k})).concat([{label:"잘 모르겠어요",key:"",cls:"ghost"}]),it=>{S.t2=it.key;addMe(it.key?"2순위: "+it.label:"2순위는 잘 모르겠어요");ask("intJobs");}));
+  }else if(step==="intJobs"){
+    waitText="intJobs";
+    addBot(`흥미검사 결과지에 나온 <b>관심 직업</b>을 아래 입력창에 적어 주세요.\n여러 개면 쉼표(,)로 나눠 주세요. 예) 웹툰작가, 시각디자이너`,
+      chipRow([{label:"건너뛰기",cls:"ghost"}],()=>{waitText=null;addMe("건너뛸게요");S.intJobs=[];ask("abil");}));
+    $("msg").focus();
+  }else if(step==="abil"){
+    addBot(`<b class="k">02 직업적성검사</b>\n<b>높은 적성</b>으로 나온 능력 3가지를 순서대로 골라 주세요. (누른 순서가 순위예요)`,
+      multiRow(Object.entries(ABIL).map(([k,v])=>({label:v,key:k})),3,keys=>{S.abil=keys;addMe("높은 적성: "+keys.map(k=>ABIL[k]).join(", "));ask("low");}));
+  }else if(step==="low"){
+    addBot(`<b>가장 낮게</b> 나온 능력은 무엇인가요?`,
+      chipRow(Object.entries(ABIL).filter(([k])=>!S.abil.includes(k)).map(([k,v])=>({label:v,key:k})).concat([{label:"건너뛰기",key:"",cls:"ghost"}]),it=>{S.low=it.key;addMe(it.key?"가장 낮은 능력: "+it.label:"건너뛸게요");ask("aptJobs");}));
+  }else if(step==="aptJobs"){
+    waitText="aptJobs";
+    addBot(`적성검사 결과지에 나온 <b>관심 직업</b>을 적어 주세요. (쉼표로 구분)`,
+      chipRow([{label:"건너뛰기",cls:"ghost"}],()=>{waitText=null;addMe("건너뛸게요");S.aptJobs=[];ask("vals");}));
+    $("msg").focus();
+  }else if(step==="vals"){
+    addBot(`<b class="k">03 직업가치관검사</b>\n<b>상위 직업가치관</b>(또는 내가 중요하게 생각하는 가치)을 순서대로 3개까지 골라 주세요.`,
+      multiRow(Object.entries(VALS).map(([k,v])=>({label:v,key:k})),3,keys=>{S.vals=keys;addMe("중요한 가치: "+keys.map(k=>VALS[k]).join(", "));ask("valJobs");}));
+  }else if(step==="valJobs"){
+    waitText="valJobs";
+    addBot(`가치관검사 결과지에 나온 <b>관심 직업</b>을 적어 주세요. (쉼표로 구분)`,
+      chipRow([{label:"건너뛰기",cls:"ghost"}],()=>{waitText=null;addMe("건너뛸게요");S.valJobs=[];ask("result");}));
+    $("msg").focus();
+  }else if(step==="result"){
+    showResult();
+  }
+}
+
+/* ---------- 점수 계산 ---------- */
+function myJobs(){const all=[...S.intJobs.map(x=>[x,"흥미"]),...S.aptJobs.map(x=>[x,"적성"]),...S.valJobs.map(x=>[x,"가치관"])];const m=new Map();
+  all.forEach(([n,src])=>{const k=norm(n);if(!k)return;const e=m.get(k)||{name:n,src:new Set()};e.src.add(src);m.set(k,e);});return [...m.values()];}
+function same(a,b){const x=norm(a),y=norm(b);if(!x||!y)return false;if(x===y)return true;const [sh,lg]=x.length<=y.length?[x,y]:[y,x];return sh.length>=3&&lg.includes(sh);}
+function score(j){
+  let s=0,why=[];
+  if(S.t1){if(j.code[0]===S.t1){s+=30;why.push(TYPES[S.t1][0]);}else if(j.code.includes(S.t1)){s+=22;why.push(TYPES[S.t1][0]);}}
+  if(S.t2&&j.code.includes(S.t2)){s+=j.code[0]===S.t2?16:13;why.push(TYPES[S.t2][0]);}
+  const ab=S.abil.filter(a=>j.ab.includes(a));s+=ab.length*10;
+  if(S.low&&j.ab.includes(S.low))s-=6;
+  const va=S.vals.filter(v=>j.va.includes(v));s+=va.length*8;
+  const src=new Set();myJobs().forEach(m=>{if(same(m.name,j.name))m.src.forEach(x=>src.add(x));});
+  if(src.size)s+=12+src.size*4;
+  const max=30+16+30+16;
+  return {job:j,score:s,pct:Math.max(5,Math.min(99,Math.round(s/max*100))),types:why,ab,va,src:[...src],gold:src.size>=2||(src.size>=1&&why.length>=1&&ab.length>=2&&va.length>=1)};
+}
+function ranked(){return JOBS.map(score).sort((a,b)=>b.score-a.score);}
+
+/* ---------- 카드 ---------- */
+function card(r,i){
+  const j=r.job,c=el("div","card"+(r.gold?" gold":""));
+  const picked=S.picks.indexOf(j.name);
+  c.innerHTML=`<h4>${i!=null?`<span class="rk">${i+1}</span>`:""}${esc(j.name)}<span class="pct">${r.pct}%</span></h4>
+  <div class="bar"><i style="width:${r.pct}%"></i></div>
+  <p>${esc(j.desc)}</p>
+  <div class="tags">${r.gold?`<span class="tag g">✨ 황금 지점</span>`:""}${r.src.map(s=>`<span class="tag m">${s}검사 관심 직업</span>`).join("")}${r.types.map(t=>`<span class="tag">흥미 ${t}</span>`).join("")}${r.ab.map(a=>`<span class="tag">적성 ${ABIL[a]}</span>`).join("")}${r.va.map(v=>`<span class="tag">가치 ${VALS[v]}</span>`).join("")}</div>
+  <div class="cbtn"><button class="more">🔎 자세히</button><button class="${picked>=0?"picked":"pick"}">${picked>=0?`⭐ ${picked+1}순위`:"⭐ 담기"}</button></div>`;
+  c.querySelector(".more").onclick=()=>{addMe(j.name+" 더 알려 줘");detail(j);};
+  const pb=c.querySelector(".cbtn button:last-child");
+  pb.onclick=()=>{togglePick(j.name);const p=S.picks.indexOf(j.name);pb.className=p>=0?"picked":"pick";pb.textContent=p>=0?`⭐ ${p+1}순위`:"⭐ 담기";};
+  return c;
+}
+function cardsBox(list,start){const w=el("div","cards");list.forEach((r,i)=>w.appendChild(card(r,start!=null?start+i:null)));return w;}
+function detail(j){
+  const r=score(j);
+  const sim=ranked().filter(x=>x.job!==j&&x.job.code[0]===j.code[0]&&x.job.kw.some(k=>j.kw.includes(k))).slice(0,4);
+  const box=el("div","detail");
+  box.innerHTML=`<h3>${esc(j.name)} ${r.gold?'<span class="tag g">✨ 황금 지점</span>':""}</h3>
+  <dl><dt>하는 일</dt><dd>${esc(j.desc)}</dd>
+  <dt>흥미 유형</dt><dd>${[...j.code].map(k=>TYPES[k][0]).join(" · ")}</dd>
+  <dt>필요한 능력</dt><dd>${j.ab.map(a=>(S.abil.includes(a)?"<b>":"")+ABIL[a]+(S.abil.includes(a)?" ✔</b>":"")).join(", ")}</dd>
+  <dt>중요한 가치</dt><dd>${j.va.map(v=>(S.vals.includes(v)?"<b>":"")+VALS[v]+(S.vals.includes(v)?" ✔</b>":"")).join(", ")}</dd>
+  <dt>관련 학과</dt><dd>${esc(j.major)}</dd>
+  <dt>나와 맞는 정도</dt><dd><b>${r.pct}%</b>${S.low&&j.ab.includes(S.low)?` <span class="red">(가장 낮은 능력 '${ABIL[S.low]}'이 필요한 직업이에요. 키울 방법도 찾아봐요)</span>`:""}</dd>
+  <dt>더 알아보기</dt><dd>커리어넷 <a href="https://www.career.go.kr/cloud/w/job/list" target="_blank" rel="noopener">직업정보</a>에서 '${esc(j.name)}'을 검색해 보세요.</dd></dl>`;
+  const b=addBot(`<b class="k">${esc(j.name)}</b>에 대해 알려 줄게요. ✔ 표시는 나의 검사 결과와 겹치는 부분이에요.`,box);
+  const items=[{label:S.picks.includes(j.name)?"⭐ 이미 담았어요":"⭐ 탐색할 직업에 담기",act:"pick"}].concat(sim.map(x=>({label:"비슷한 직업: "+x.job.name,act:"job",job:x.job}))).concat([{label:"추천 더 보기",act:"more",cls:"ghost"}]);
+  b.appendChild(chipRow(items,it=>{if(it.act==="pick"){if(!S.picks.includes(j.name))togglePick(j.name);else toast("이미 담겨 있어요");}else if(it.act==="job"){addMe(it.job.name+" 알려 줘");detail(it.job);}else moreRecs();}));
+}
+
+/* ---------- 결과 ---------- */
+function profileText(){
+  const t=S.t1?TYPES[S.t1][0]+(S.t2?"·"+TYPES[S.t2][0]:""):"-";
+  return `흥미 <b>${t}</b> · 적성 <b>${S.abil.map(a=>ABIL[a]).join(", ")||"-"}</b> · 가치 <b>${S.vals.map(v=>VALS[v]).join(", ")||"-"}</b>`;
+}
+function showResult(){
+  S.step="chat";S.shown=6;save();
+  const R=ranked();
+  const mine=myJobs();
+  const gold=mine.filter(m=>m.src.size>=2);
+  let msg=`정리해 볼게요! 📝\n${profileText()}\n\n`;
+  if(S.t1)msg+=`<b>${TYPES[S.t1][0]}</b>은 ${TYPES[S.t1][1]}을 좋아하는 유형이에요.`+(S.t2?` 여기에 <b>${TYPES[S.t2][0]}</b>(${TYPES[S.t2][1]})의 특징도 함께 가지고 있어요.`:"")+"\n";
+  if(gold.length)msg+=`\n✨ <span class="red">황금 지점 발견!</span> 두 가지 이상 검사에서 함께 나온 직업: <b>${gold.map(g=>esc(g.name)).join(", ")}</b>\n`;
+  else if(mine.length)msg+=`\n검사 결과지의 관심 직업: ${mine.map(m=>esc(m.name)).join(", ")}\n`;
+  msg+=`\n세 가지 검사 결과가 가장 많이 겹치는 직업을 추천해요. 마음에 드는 직업은 <b>⭐ 담기</b>로 1·2·3순위에 넣어 보세요.`;
+  addBot(msg,cardsBox(R.slice(0,6),0));
+  const outside=mine.filter(m=>!JOBS.some(j=>same(j.name,m.name)));
+  if(outside.length){
+    const b=addBot(`검사 결과지에 나온 직업 중 <b>${outside.map(m=>esc(m.name)).join(", ")}</b>은(는) 제 직업 목록에 없어서 직접 담을 수 있게 해 둘게요. 커리어넷 <a href="https://www.career.go.kr/cloud/w/job/list" target="_blank" rel="noopener">직업정보</a>에서 자세히 찾아보세요.`);
+    b.appendChild(chipRow(outside.map(m=>({label:"⭐ "+m.name+" 담기",name:m.name})),it=>togglePick(it.name,true)));
+  }
+  nextChips();
+}
+function nextChips(){
+  addBot(`다음으로 무엇을 할까요? 아래 입력창에 <b>동물, 컴퓨터, 디자인, 여행</b>처럼 관심 분야를 적어도 찾아 줄게요.`,
+    chipRow([{label:"추천 더 보기",a:"more"},{label:"관심 분야로 찾기",a:"field"},{label:"📋 결과 정리하기",a:"sum",cls:"go"},{label:"AI 챗봇용 질문 만들기",a:"prompt"}],it=>{addMe(it.label);if(it.a==="more")moreRecs();else if(it.a==="field")fieldChips();else if(it.a==="sum")summary();else promptCopy();}));
+}
+function moreRecs(){
+  const R=ranked();const st=S.shown||6;const list=R.slice(st,st+6);S.shown=st+6;save();
+  if(!list.length){addBot("추천할 직업을 모두 보여 줬어요. 관심 분야로 더 찾아볼까요?");fieldChips();return;}
+  addBot(`나와 맞는 정도 ${st+1}~${st+list.length}위 직업이에요.`,cardsBox(list,st));
+  addBot("",chipRow([{label:"추천 더 보기",a:"more"},{label:"📋 결과 정리하기",a:"sum",cls:"go"}],it=>{addMe(it.label);it.a==="more"?moreRecs():summary();}));
+}
+const FIELDS=["동물","자연","컴퓨터","AI","게임","디자인","그림","음악","방송","운동","의료","교육","여행","요리","기계","과학","법","돈","글쓰기","패션","안전","봉사"];
+function fieldChips(){addBot("어떤 분야가 궁금한가요?",chipRow(FIELDS.map(f=>({label:f})),it=>{addMe(it.label);search(it.label);}));}
+function search(q){
+  const words=q.split(/\s+/).map(norm).filter(w=>w.length>=1);
+  const exact=JOBS.find(j=>norm(j.name)===norm(q))||JOBS.find(j=>norm(q).length>=2&&(norm(j.name).includes(norm(q))||norm(q).includes(norm(j.name))));
+  if(exact){detail(exact);return true;}
+  const typeHit=Object.entries(TYPES).find(([k,v])=>words.some(w=>norm(v[0])===w||norm(v[0]).replace("형","")===w));
+  const abHit=Object.entries(ABIL).find(([k,v])=>words.some(w=>w.length>=2&&norm(v).includes(w)));
+  const vaHit=Object.entries(VALS).find(([k,v])=>words.some(w=>w.length>=2&&norm(v).includes(w)));
+  let hits=JOBS.filter(j=>words.some(w=>w.length>=1&&(j.kw.some(k=>norm(k)===w||(w.length>=2&&norm(k).includes(w)))||(w.length>=2&&(norm(j.desc).includes(w)||norm(j.major).includes(w))))));
+  let label="";
+  if(!hits.length&&typeHit){hits=JOBS.filter(j=>j.code.includes(typeHit[0]));label=typeHit[1][0];}
+  if(!hits.length&&abHit){hits=JOBS.filter(j=>j.ab.includes(abHit[0]));label=abHit[1];}
+  if(!hits.length&&vaHit){hits=JOBS.filter(j=>j.va.includes(vaHit[0]));label=vaHit[1];}
+  if(!hits.length)return false;
+  const R=hits.map(score).sort((a,b)=>b.score-a.score).slice(0,6);
+  addBot(`'${esc(label||q)}' 관련 직업 중 나와 잘 맞는 순서로 보여 줄게요.`,cardsBox(R,null));
+  return true;
+}
+
+/* ---------- 담기 ---------- */
+function togglePick(name,silent){
+  const i=S.picks.indexOf(name);
+  if(i>=0){S.picks.splice(i,1);toast(name+" 뺐어요");}
+  else{if(S.picks.length>=3){toast("3순위까지 담을 수 있어요. 아래에서 하나를 빼 주세요");return;}S.picks.push(name);toast(`${name} → ${S.picks.length}순위로 담았어요`);}
+  save();renderPicks();
+}
+function renderPicks(){
+  const p=$("picks");
+  p.innerHTML=`<span class="lb">🔍 탐색할 직업</span>`+[0,1,2].map(i=>S.picks[i]?`<span class="pk on"><b>${i+1}</b>${esc(S.picks[i])}<span class="x" data-i="${i}">✕</span></span>`:`<span class="pk"><b>${i+1}</b>순위</span>`).join("");
+  p.querySelectorAll(".x").forEach(x=>x.onclick=()=>{const n=S.picks[+x.dataset.i];S.picks.splice(+x.dataset.i,1);save();renderPicks();toast(n+" 뺐어요");});
+}
+
+/* ---------- 결과 정리 ---------- */
+function summary(){
+  if(!S.t1&&!S.abil.length){addBot("아직 검사 결과를 입력하지 않았어요. 먼저 결과를 알려 주세요!");return;}
+  const R=ranked().slice(0,5);
+  const box=el("div","sum");
+  const opts=[...new Set([...S.picks,...R.map(r=>r.job.name)])];
+  box.innerHTML=`<h3>🗺️ 나의 진로 보물지도 정리</h3>
+  <table>
+   <tr><th>학년</th><td>${esc(S.grade||"-")}</td></tr>
+   <tr><th>01 직업흥미검사(H)</th><td>1순위 <b>${S.t1?TYPES[S.t1][0]:"-"}</b>, 2순위 <b>${S.t2?TYPES[S.t2][0]:"-"}</b><br>관심 직업: ${esc(S.intJobs.join(", ")||"-")}</td></tr>
+   <tr><th>02 직업적성검사</th><td>높은 적성: <b>${S.abil.map((a,i)=>`${i+1} ${ABIL[a]}`).join(" ")||"-"}</b><br>가장 낮은 능력: ${S.low?ABIL[S.low]:"-"}<br>관심 직업: ${esc(S.aptJobs.join(", ")||"-")}</td></tr>
+   <tr><th>03 직업가치관검사</th><td>상위 가치: <b>${S.vals.map((v,i)=>`${i+1} ${VALS[v]}`).join(" ")||"-"}</b><br>관심 직업: ${esc(S.valJobs.join(", ")||"-")}</td></tr>
+   <tr><th>챗봇 추천 직업</th><td>${R.map(r=>`${esc(r.job.name)}(${r.pct}%)`).join(", ")}</td></tr>
+  </table>
+  <table class="rank"><tr><th>① 1순위</th><th>② 2순위</th><th>③ 3순위</th></tr><tr>${[0,1,2].map(i=>`<td>${esc(S.picks[i]||"")}</td>`).join("")}</tr></table>
+  <div class="final"><label>★ 최종 탐색하고 싶은 직업</label>
+   <select id="fSel"><option value="">— 고르기 —</option>${opts.map(o=>`<option ${S.final===o?"selected":""}>${esc(o)}</option>`).join("")}</select>
+   <textarea id="fWhy" placeholder="이 직업을 고른 이유 (예: 흥미·적성·가치관이 모두 겹치는 황금 지점이라서)">${esc(S.reason)}</textarea></div>
+  <div class="acts"><button class="y" id="aPrint">🖨️ 인쇄·PDF로 저장</button><button id="aTxt">💾 텍스트 파일로 저장</button><button class="w" id="aCopy">📋 복사하기</button></div>`;
+  addBot(S.picks.length?"지금까지의 결과를 정리했어요. 활동지의 <b>탐색할 직업</b>과 <b>최종 탐색하고 싶은 직업</b> 칸에 옮겨 적어 보세요.":"아직 담은 직업이 없어요. 추천 카드에서 <b>⭐ 담기</b>를 누르면 1·2·3순위에 들어가요.",box);
+  box.querySelector("#fSel").onchange=e=>{S.final=e.target.value;save();};
+  box.querySelector("#fWhy").oninput=e=>{S.reason=e.target.value;save();};
+  box.querySelector("#aPrint").onclick=()=>{buildPrint();window.print();};
+  box.querySelector("#aTxt").onclick=()=>{const blob=new Blob(["﻿"+plain()],{type:"text/plain;charset=utf-8"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`진로챗봇_결과_${new Date().toISOString().slice(0,10)}.txt`;document.body.appendChild(a);a.click();a.remove();toast("파일을 저장했어요");};
+  box.querySelector("#aCopy").onclick=()=>copyText(plain(),"결과를 복사했어요");
+}
+function plain(){
+  const R=ranked().slice(0,5);
+  return `[나의 진로 보물지도 - 진로 챗봇 결과]
+학년: ${S.grade||"-"}
+01 직업흥미검사(H): 1순위 ${S.t1?TYPES[S.t1][0]:"-"}, 2순위 ${S.t2?TYPES[S.t2][0]:"-"} / 관심 직업: ${S.intJobs.join(", ")||"-"}
+02 직업적성검사: 높은 적성 ${S.abil.map(a=>ABIL[a]).join(", ")||"-"} / 가장 낮은 능력 ${S.low?ABIL[S.low]:"-"} / 관심 직업: ${S.aptJobs.join(", ")||"-"}
+03 직업가치관검사: 상위 가치 ${S.vals.map(v=>VALS[v]).join(", ")||"-"} / 관심 직업: ${S.valJobs.join(", ")||"-"}
+챗봇 추천 직업: ${R.map(r=>`${r.job.name}(${r.pct}%)`).join(", ")}
+탐색할 직업: 1순위 ${S.picks[0]||"-"} / 2순위 ${S.picks[1]||"-"} / 3순위 ${S.picks[2]||"-"}
+★ 최종 탐색하고 싶은 직업: ${S.final||"-"}
+고른 이유: ${S.reason||"-"}`;
+}
+function buildPrint(){
+  const R=ranked().slice(0,5);
+  $("printArea").innerHTML=`<h1>나의 진로 보물지도 · 진로 챗봇 결과</h1><div class="sub">${esc(S.grade||"")} · ${new Date().toLocaleDateString("ko-KR")}　　반 ____ 번 ____ 이름 __________</div>
+  <h2>진로심리검사 결과</h2><table>
+  <tr><th>01 직업흥미검사(H)</th><td>1순위 ${S.t1?TYPES[S.t1][0]:"-"}, 2순위 ${S.t2?TYPES[S.t2][0]:"-"}<br>관심 직업: ${esc(S.intJobs.join(", ")||"-")}</td></tr>
+  <tr><th>02 직업적성검사</th><td>높은 적성: ${S.abil.map(a=>ABIL[a]).join(", ")||"-"}<br>가장 낮은 능력: ${S.low?ABIL[S.low]:"-"}<br>관심 직업: ${esc(S.aptJobs.join(", ")||"-")}</td></tr>
+  <tr><th>03 직업가치관검사</th><td>상위 가치: ${S.vals.map(v=>VALS[v]).join(", ")||"-"}<br>관심 직업: ${esc(S.valJobs.join(", ")||"-")}</td></tr></table>
+  <h2>진로 챗봇 추천 직업</h2><table>${R.map((r,i)=>`<tr><th>${i+1}. ${esc(r.job.name)} (${r.pct}%)</th><td>${esc(r.job.desc)}<br><small>관련 학과: ${esc(r.job.major)}</small></td></tr>`).join("")}</table>
+  <h2>탐색할 직업</h2><table class="rank"><tr><th>① 1순위</th><th>② 2순위</th><th>③ 3순위</th></tr><tr>${[0,1,2].map(i=>`<td>${esc(S.picks[i]||"")}</td>`).join("")}</tr></table>
+  <h2>★ 최종 탐색하고 싶은 직업</h2><table><tr><th>직업</th><td style="height:34px"><b>${esc(S.final||"")}</b></td></tr><tr><th>고른 이유</th><td style="height:70px">${esc(S.reason||"")}</td></tr></table>`;
+}
+function copyText(t,msg){
+  const done=()=>toast(msg);
+  if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(t).then(done,()=>fallback());else fallback();
+  function fallback(){const ta=document.createElement("textarea");ta.value=t;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();try{document.execCommand("copy");done();}catch(e){toast("복사하지 못했어요. 직접 선택해 복사해 주세요");}ta.remove();}
+}
+function promptCopy(){
+  const t=`진로 챗봇님, 안녕하세요. 저는 중학교 ${S.grade||"__학년"} 학생으로, 진로 수업 시간에 진로심리검사 3가지를 했습니다.
+01 직업흥미검사(H): 일반 흥미 유형으로는 1순위 ${S.t1?TYPES[S.t1][0]:"____"}, 2순위는 ${S.t2?TYPES[S.t2][0]:"____"}이 가장 높게 나왔고, 관심 직업으로는 ${S.intJobs.join(", ")||"____"}입니다.
+02 직업적성검사: 높은 적성으로 나온 능력 3가지는 ${S.abil.map(a=>ABIL[a]).join(", ")||"____"}이고, 가장 낮게 나온 능력은 ${S.low?ABIL[S.low]:"____"}입니다. 관심 직업은 ${S.aptJobs.join(", ")||"____"}입니다.
+03 직업가치관검사: 상위 직업가치관으로는 ${S.vals.map(v=>VALS[v]).join(", ")||"____"}입니다. 관심 직업은 ${S.valJobs.join(", ")||"____"}입니다.
+진로 챗봇님, 저의 직업흥미검사(H), 직업적성검사, 직업가치관검사 결과에 가장 알맞은 직업을 추천해 주세요.`;
+  const box=el("div","detail",`<div style="white-space:pre-wrap;font-size:13.5px;line-height:1.6">${esc(t)}</div><div class="acts"><button>📋 질문 복사하기</button></div>`);
+  box.querySelector("button").onclick=()=>copyText(t,"질문을 복사했어요");
+  addBot("선생님이 안내한 AI 진로 챗봇에 붙여넣을 수 있게 활동지 문장으로 정리했어요.",box);
+}
+
+/* ---------- 입력 ---------- */
+function onSend(){
+  const t=$("msg").value.trim();if(!t)return;$("msg").value="";
+  addMe(t);
+  if(waitText){const k=waitText;waitText=null;S[k]=splitJobs(t);save();
+    const nx={intJobs:"abil",aptJobs:"vals",valJobs:"result"}[k];
+    if(!S[k].length)addBot("직업 이름을 찾지 못했어요. 다음 단계로 넘어갈게요.");
+    ask(nx);return;}
+  if(S.step!=="chat"){addBot("먼저 위의 질문에 답해 주세요. 버튼을 누르면 돼요! 🙂");return;}
+  if(/처음|다시 시작|리셋/.test(t)){reset();return;}
+  if(/결과|정리|요약/.test(t)){summary();return;}
+  if(/더\s*(보|추천)|다른\s*직업|추천/.test(t)){moreRecs();return;}
+  if(/질문|ai|AI|챗지피티|gpt/i.test(t)&&/만들|복사/.test(t)){promptCopy();return;}
+  if(/고마|감사/.test(t)){addBot("천만에요! 담은 직업을 커리어넷에서 더 찾아보고, 활동지에 옮겨 적어 보세요. 😊");return;}
+  if(!search(t)){
+    addBot(`'${esc(t)}'에 맞는 직업을 찾지 못했어요. 이렇게 물어봐 주세요.\n· 직업 이름: <b>수의사</b>, <b>웹툰작가</b>\n· 관심 분야: <b>동물, 컴퓨터, 디자인, 음악, 운동, 여행</b>\n· 흥미 유형·능력·가치: <b>예술형</b>, <b>창의력</b>, <b>안정성</b>`);
+  }
+}
+$("send").onclick=onSend;
+$("msg").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.isComposing){e.preventDefault();onSend();}});
+$("bSum").onclick=()=>{addMe("결과 정리해 줘");summary();};
+let armReset=false;
+$("bReset").onclick=()=>{if(!armReset){armReset=true;$("bReset").textContent="정말 지울까요?";setTimeout(()=>{armReset=false;$("bReset").textContent="↺ 처음부터";},3000);return;}reset();};
+function reset(){armReset=false;$("bReset").textContent="↺ 처음부터";S=blank();save();chat.innerHTML="";renderPicks();ask("grade");}
+
+/* ---------- 시작 ---------- */
+if(/^https?:$/.test(location.protocol)&&!(window.self!==window.top)){$("bHome").hidden=false;$("bDl").hidden=false;}
+load();renderPicks();
+if(S.step==="chat"){
+  addBot(`다시 만나서 반가워요! 지난번 결과를 이어서 볼게요.\n${profileText()}`);
+  showResult();
+}else{S.step="grade";S.picks=S.picks||[];ask("grade");}
+</script>
+</body>
+</html>
