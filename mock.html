@@ -1,5 +1,5 @@
 <!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style></head><body>
-<title>6-4 고입 모의면접기 · 외국어고·국제고·자율형사립고</title>
+<title>6-4 고입 모의면접기 · 내 예상 문제로 연습</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700;900&display=swap">
 <style>
@@ -128,50 +128,61 @@ textarea { font:inherit; width:100%; min-height:120px; border:1.5px solid var(--
 @media (prefers-reduced-motion: no-preference) { .qcard { transition:border-color .2s; } }
 </style>
 
+<style>
+.qin textarea{min-height:190px}
+.qlist{list-style:none;margin:0;padding:0;display:grid;gap:6px;max-height:340px;overflow:auto;counter-reset:q}
+.qlist li{counter-increment:q}
+.qlist button{width:100%;text-align:left;display:flex;gap:8px;align-items:flex-start;background:var(--soft);border:1.5px solid transparent;border-radius:10px;padding:8px 10px;color:var(--ink);font-size:14.5px;line-height:1.45;word-break:keep-all}
+.qlist button::before{content:counter(q);flex:none;width:22px;height:22px;border-radius:50%;background:var(--navy);color:#fff;font-size:12px;font-weight:900;display:grid;place-items:center;margin-top:1px}
+.qlist button[aria-current="true"]{border-color:var(--navy);background:var(--cream)}
+.qlist .x{margin-left:auto;color:var(--muted);font-weight:700;padding:0 4px}
+.empty{color:var(--muted);font-size:14px;margin:0}
+.tsel{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.tsel label{font-size:13.5px;color:var(--muted);font-weight:700}
+</style>
 <div class="wrap">
   <nav class="homebar" aria-label="홈"><a class="homebtn" href="./"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/><path d="M10 19.5v-5h4v5"/></svg><span>홈</span></a><span class="homesub">진로·진학 로드맵 · STEP 6 실행 준비</span></nav>
 
   <header class="hero">
-    <small>STEP 6 실행 준비 · 외국어고 · 국제고 · 자율형사립고</small>
+    <small>STEP 6 실행 준비 · 6-4 모의면접기</small>
     <h1>고입 <span>모의면접기</span></h1>
-    <div class="groups" role="group" aria-label="학교 유형" id="groups"></div>
-    <div class="schools" role="group" aria-label="면접 볼 학교 고르기" id="schools"></div>
+    <p style="margin:0;color:#dfe6f7;word-break:keep-all">내가 준비한 <b style="color:#ffd84d">예상 문제</b>를 넣으면, 그 문제로 실전처럼 면접 연습을 해요. 시간을 정하고, 녹화해서 다시 보며 고쳐 보세요.</p>
   </header>
 
-  <div id="viewPractice">
   <div class="main">
-    <section class="card" aria-labelledby="sName">
-      <span class="tag" id="sType"></span>
-      <h2 id="sName"></h2>
-      <div><h3>면접은 이렇게 진행돼요</h3><ul class="dots" id="sFmt"></ul></div>
-      <div id="sJhBox"><h3>전형 한눈에</h3><ul class="dots" id="sJh"></ul></div>
-      <details class="past" id="sPastBox"><summary id="sPastT"></summary><ol id="sPast"></ol></details>
-      
-      <div class="links" id="sLinks"></div>
-      <p class="src" id="sSrc"></p>
+    <section class="card qin" aria-labelledby="inTitle">
+      <h2 id="inTitle">① 내 예상 문제 넣기</h2>
+      <div class="fld"><label for="qIn">한 줄에 한 문제씩 적어요 <span class="note" style="font-weight:400">자기소개서·지원 학교 자료를 보며 예상 문제를 만들어 보세요</span></label>
+        <textarea id="qIn" placeholder="예)&#10;우리 학교에 지원한 이유는 무엇인가요?&#10;자기소개서에 쓴 공부 방법을 설명해 보세요.&#10;친구와 의견이 달랐을 때 어떻게 해결했나요?"></textarea></div>
+      <div class="row"><button type="button" class="btn pri" id="qAdd">문제 목록에 넣기</button><button type="button" class="btn" id="qSample">기본 질문 넣기</button><button type="button" class="btn" id="qClear">목록 비우기</button></div>
+      <p class="note" id="qMsg" role="status" aria-live="polite"></p>
+      <h3>내 문제 목록 <span class="score" id="qCount">0문항</span></h3>
+      <ol class="qlist" id="qList"></ol>
+      <p class="empty" id="qEmpty">아직 문제가 없어요. 위에 예상 문제를 적고 '문제 목록에 넣기'를 눌러 주세요.</p>
+      <p class="note" style="margin:0">문제는 이 기기의 브라우저에만 저장돼요.</p>
     </section>
 
     <section class="card" aria-labelledby="pTitle">
-      <h2 id="pTitle">질문 연습</h2>
-      <div class="seg" role="group" aria-label="질문 분야" id="cats"></div>
-      <div class="qcard"><span class="cat" id="qCat"></span><p id="qTxt" aria-live="polite"></p><span class="qpos" id="qPos"></span></div>
+      <h2 id="pTitle">② 질문 연습</h2>
+      <div class="qcard"><span class="cat">예상 문제</span><p id="qTxt" aria-live="polite">문제를 넣으면 여기에 질문이 나와요.</p><span class="qpos" id="qPos"></span></div>
+      <div class="row"><button type="button" class="btn" id="next">다음 질문</button><button type="button" class="btn" id="shuffle">섞어서 뽑기</button></div>
+      <div class="tsel">
+        <label for="thinkLen">생각 시간</label><select class="sel" id="thinkLen"><option value="0">없음(바로 답변)</option><option value="15">15초</option><option value="30" selected>30초</option><option value="60">1분</option></select>
+        <label for="ansLen">답변 시간</label><select class="sel" id="ansLen"><option value="30">30초</option><option value="60" selected>1분</option><option value="90">1분 30초</option><option value="120">2분</option><option value="180">3분</option></select>
+      </div>
       <div class="timer">
         <output id="tm" aria-live="off">00:30</output>
-        <span class="phase" id="phase">생각 30초 → 답변</span>
-        <label class="note" for="ansLen" style="margin-left:auto">답변 시간</label>
-        <select class="sel" id="ansLen"><option value="60">1분</option><option value="90">1분 30초</option><option value="120">2분</option></select>
+        <span class="phase" id="phase"></span>
       </div>
-      <div class="row"><button type="button" class="btn pri" id="tStart">생각 30초 시작</button><button type="button" class="btn" id="tReset">타이머 초기화</button><button type="button" class="btn" id="next">다음 질문</button><button type="button" class="btn" id="shuffle">섞어서 뽑기</button></div>
-      <div class="tip" id="tip"></div>
+      <div class="row"><button type="button" class="btn pri" id="tStart">시작</button><button type="button" class="btn" id="tReset">타이머 초기화</button></div>
       <div class="fld"><label for="memo">답변 메모 <span class="note" style="font-weight:400">핵심만 적고 말로 연습해요</span></label><textarea id="memo" placeholder="결론: &#10;이유·경험: &#10;배운 점: &#10;입학 후 다짐: "></textarea><div class="cnt" id="memoCnt">0자</div></div>
-      <div><h3>면접관 꼬리질문 미리 보기</h3><ul class="tail" id="tail"></ul></div>
       <div><h3>답변 셀프 체크 <span class="score" id="score">0 / 5</span></h3>
         <ul class="chk" id="chk">
-          <li><label><input type="checkbox" id="k1">첫 문장에 결론을 말했다</label></li>
-          <li><label><input type="checkbox" id="k2">내 경험을 구체적으로(언제·무엇을·어떻게) 넣었다</label></li>
-          <li><label><input type="checkbox" id="k3">지원 학교·학과와 연결했다</label></li>
-          <li><label><input type="checkbox" id="k4">"~것 같아요", "그런", "약간" 같은 습관어가 없었다</label></li>
-          <li><label><input type="checkbox" id="k5">시간 안에 또렷하게, 바른 자세로 말했다</label></li>
+          <li><label><input type="checkbox">첫 문장에 결론을 말했다</label></li>
+          <li><label><input type="checkbox">내 경험을 구체적으로(언제·무엇을·어떻게) 넣었다</label></li>
+          <li><label><input type="checkbox">지원 학교·학과와 연결했다</label></li>
+          <li><label><input type="checkbox">"~것 같아요", "그런", "약간" 같은 습관어가 없었다</label></li>
+          <li><label><input type="checkbox">시간 안에 또렷하게, 바른 자세로 말했다</label></li>
         </ul></div>
       <p class="note" id="done"></p>
     </section>
@@ -191,7 +202,7 @@ textarea { font:inherit; width:100%; min-height:120px; border:1.5px solid var(--
           <button type="button" class="btn" id="recAgain" hidden>다시 찍기</button>
           <button type="button" class="btn" id="recSave" hidden>영상 저장</button>
         </div>
-        <label class="note" style="display:flex;gap:8px;align-items:center;min-height:40px"><input type="checkbox" id="recAuto" style="width:20px;height:20px;accent-color:#17325e"> 답변 타이머(생각 30초 후)가 시작되면 자동으로 녹화하고, 끝나면 자동으로 멈추기</label>
+        <label class="note" style="display:flex;gap:8px;align-items:center;min-height:40px"><input type="checkbox" id="recAuto" style="width:20px;height:20px;accent-color:#17325e"> 답변 시간이 시작되면 자동으로 녹화하고, 끝나면 자동으로 멈추기</label>
         <p class="note" id="recMsg" role="status" aria-live="polite"></p>
         <div class="row" id="vAlt" hidden><label class="btn pick" for="vpick">📷 카메라 앱으로 찍은 영상 고르기<input id="vpick" type="file" accept="video/*" capture="user"></label></div>
       </div>
@@ -212,171 +223,75 @@ textarea { font:inherit; width:100%; min-height:120px; border:1.5px solid var(--
     </div>
   </section>
 
-  </div>
-  <p class="src" style="text-align:center">면접 방식·기출은 2026학년도 입학생 기준 진로상담실 보충 자료와 지원자 후기를 바탕으로 했어요. 해마다 바뀔 수 있으니 1단계 합격 발표 후 학교 공지를 꼭 다시 확인하세요.</p>
   <div class="foot"><span class="hm"><svg viewBox="0 0 40 48" width="26" height="31" role="img" aria-label="수원희망등대 등대" style="display: block; flex: none"><polygon points="20,10 0,3 0,15" fill="#ffd43b" opacity="0.75"></polygon><polygon points="20,10 40,3 40,15" fill="#ffd43b" opacity="0.75"></polygon><polygon points="13,8 20,2 27,8" fill="#c92a2a"></polygon><rect x="14" y="8" width="12" height="6" fill="#ffe066" stroke="#1d3557" stroke-width="1.2"></rect><rect x="12" y="14" width="16" height="2.5" fill="#1d3557"></rect><polygon points="14,16.5 26,16.5 29,42 11,42" fill="#ffffff" stroke="#1d3557" stroke-width="1.2" stroke-linejoin="round"></polygon><polygon points="13.47,21 26.53,21 27.12,26 12.88,26" fill="#e03131"></polygon><polygon points="12.29,31 27.71,31 28.29,36 11.71,36" fill="#e03131"></polygon><rect x="18" y="37" width="4" height="5" rx="1" fill="#1d3557"></rect><rect x="8" y="42" width="24" height="4" rx="1.2" fill="#1d3557"></rect></svg><span style="font-size: 19px; line-height: 23px; font-weight: 900; letter-spacing: 1px"><span style="color: #1864ab">수원</span><span style="color: #d9480f">희망등대</span></span></span><span class="brand"><span>진로·진학 로드맵</span></span></div>
 </div>
 
+
 <script>
 (function(){
-var S = [{"id": "suwonfl", "n": "수원외고(공)", "g": "fl", "sub": "외국어고", "yo": "https://www.sawl.hs.kr/sys/bbs/board.php?bo_table=040101", "home": "https://www.sawl.hs.kr", "fmt": ["공통 2문항 + 개별 2문항, 면접 5분", "구상실에서 5분 동안 공통 1 + 개별 2문항을 구상해요(남은 공통 1문항은 인성 영역)."], "jh": ["학과(학급): 영어(3) · 러시아어(1) · 일본어(1) · 프랑스어(1) · 중국어(2)", "모집: 일반 160 · 사회통합 40 · 지역우수 10(수원 소재 중학교) · 특례 4", "1단계: 영어 내신 160점 − 출결 감점", "2단계: 1단계 160 + 면접 40(자기주도학습 25 · 인성 15)", "동점자: 면접 자기주도 → 인성 → 1단계 성적 순", "최근 경쟁률(일반): 2026 2.02:1 · 2025 1.65:1 · 2024 2.03:1", "입학설명회(2026): 5.30 · 7.14 · 8.27 · 10.15 · 10.31 — 홈페이지 사전 예약"], "py": "2024학년도", "past": ["[공통] 제시문 (가) 리더는 공동체 이익을 추구 (나) 리더는 의견 수렴이 중요 → (다) 기후변화로 옆 마을 작물을 따라 길러 이웃 마을 이익이 줄어든 이장 A를 판단하고 반론·재반론하기", "[공통] 모둠장 A라면, 주제와 맞지 않는 자료를 조사한 B와 역할 분담이 불공평하다는 C에게 각각 어떻게 대처할까?", "[자기주도] 영어 외 다른 과목 공부법은? 수원외고에서 어떻게 활용할까?", "[독서] 가치관 형성에 도움을 준 책과, 그 가치를 실현한 활동은?", "[진로] 꿈을 위해 수원외고의 중점 외국어 교육을 어떻게 활용할까?", "[진로] AI가 내 꿈의 직업을 대체한다면? 4차 산업혁명 시대에 필요한 자질은?", "[인성] 기숙사 규칙 2가지를 정한다면? 어기는 학생이 있다면 어떻게?", "[인성] 입학 후 불합리한 일을 당하면 장단점을 활용해 어떻게 대처할까?"]}, {"id": "gafl", "n": "경기외고", "g": "fl", "sub": "외국어고", "yo": "http://admission.gafl.hs.kr/?act=doc&mcode=1011", "home": "https://www.gafl.hs.kr", "fmt": ["공통 1문항 + 개별 2문항, 면접관 3인 · 학생 1인", "면접실 2곳, 면접실당 2분씩 총 4분 (2025 후기: 면접실당 3분씩 총 6분, 꼬리 질문 있음)", "배점: 자기주도학습 20 · 지원 동기와 진로 계획 10 · 인성 10", "면접 문항지를 학생이 직접 확인한 뒤 답변을 시작해요."], "jh": ["학과(학급): 영어(4) · 중국어(2) · 일본어(2)", "모집: 일반 166 · 사회통합 42 · 특례 4", "1단계: 영어 내신 160점 − 출결 감점 → 2배수", "2단계: 1단계 160 + 면접 40", "동점자: 면접 총점 → 자기주도 → 1단계 총점 → 3-2 영어 순", "IB반: 영어과 합격생 중 에세이·인터뷰로 별도 선발", "입학설명회(2026): 5.16 · 11.22"], "py": "", "past": []}, {"id": "gyfl", "n": "고양외고", "g": "fl", "sub": "외국어고", "yo": "https://www.gyfl.hs.kr/admission/main/main.php?categoryid=02&menuid=02&groupid=00", "home": "https://gyfl.hs.kr", "fmt": [], "jh": [], "py": "", "past": []}, {"id": "gcfl", "n": "과천외고", "g": "fl", "sub": "외국어고", "yo": "https://www.gcfl.or.kr/admission/handbook.asp", "home": "https://www.gcfl.or.kr", "fmt": ["공통 1문항 + 개별 2문항", "공통 질문 구상 4분, 학생별 면접 5분 — 메모를 볼 수 없어요."], "jh": [], "py": "", "past": []}, {"id": "gimpofl", "n": "김포외고", "g": "fl", "sub": "외국어고", "yo": "http://www.gfl.hs.kr/?act=board.list&code=112012", "home": "https://www.gfl.hs.kr", "fmt": [], "jh": [], "py": "", "past": []}, {"id": "ddcfl", "n": "동두천외고(공)", "g": "fl", "sub": "외국어고", "yo": "https://dfl-h.goedy.kr/dfl-h/cm/cntnts/cntntsView.do?mi=10213&cntntsId=2176", "home": "https://dfl-h.goedy.kr", "fmt": [], "jh": [], "py": "", "past": []}, {"id": "snfl", "n": "성남외고(공)", "g": "fl", "sub": "외국어고", "yo": "https://snfl-h.goesn.kr/snfl-h/cm/cntnts/cntntsView.do?mi=27499&cntntsId=4554", "home": "https://snfl-h.goesn.kr", "fmt": [], "jh": ["학과(학급): 영어(2) · 독일어(2) · 일본어(2) · 중국어(2)", "모집: 일반 160 · 사회통합 40 · 특례 4", "1단계: 영어 내신 160점 − 출결 감점 → 1.5배수", "2단계: 1단계 160 + 면접 40", "동점자: 면접 총점 → 자기주도 → 1단계 총점 → 3-2 영어 순", "입학설명회(2026): 5.29 · 7.9 · 8.26 · 10.16 · 11.5"], "py": "", "past": []}, {"id": "anyangfl", "n": "안양외고", "g": "fl", "sub": "외국어고", "yo": "https://anyangfl-h.goeay.kr/anyangfl-h/cm/cntnts/cntntsView.do?mi=9343&cntntsId=1274", "home": "https://anyangfl-h.goeay.kr", "fmt": ["공통 2문항 + 개별 2문항, 공통 질문 구상 5분", "면접실1(1분 30초) → 면접실2(1분 30초) → 개별 면접실(질문 2개, 2분)", "구상실에서 문항지에 필기 가능, 면접 때 문항지를 보며 답해요. 남은 공통 1문항은 면접실에서 즉문즉답."], "jh": [], "py": "", "past": []}, {"id": "ggg", "n": "고양국제고", "g": "intl", "sub": "국제고", "yo": "https://ggg.hs.kr/?menu_no=490", "home": "https://www.ggg.hs.kr", "fmt": [], "jh": [], "py": "", "past": []}, {"id": "dtg", "n": "동탄국제고", "g": "intl", "sub": "국제고", "yo": "https://www.dtg.hs.kr/sys/bbs/board.php?bo_table=020203", "home": "http://www.dtg.hs.kr", "fmt": ["개별 문항 5~7개, 최대 8분 이내 답변", "자기주도학습 영역 4문항(학습 경험·과정·지원 동기 등) + 인성·진로 3문항"], "jh": ["모집: 일반 120 · 사회통합 40 · 지역우수 40(화성시 소재 중학교) · 특례 4 — 8학급, 학급당 25명", "1단계: 영어 내신 160점 − 출결 감점 → 2배수", "2단계: 1단계 160 + 면접 40(자기주도학습 25 · 인성 15)", "동점자: 면접 → 자기주도 → 1단계 영어 순", "입학설명회(2026): 5.10 · 9.6 · 9.21 · 10.18 · 11.8 — 홈페이지 사전 예약"], "py": "", "past": []}, {"id": "csia", "n": "청심국제고", "g": "intl", "sub": "국제고", "yo": "https://admission.csia.hs.kr/?act=doc&mcode=1810", "home": "http://www.csia.hs.kr", "fmt": ["핵심 질문: ① 어떻게 스스로 공부했는가 ② 왜 청심국제고인가 ③ 청심에서 무엇을 하고 싶은가 ④ 나의 진로와 청심 교육과정의 연결 ⑤ 배려·협력·갈등 해결 경험"], "jh": ["경기 가평 · 남녀공학 · 전교생 기숙사 · 연간 비용 약 1,900만 원 수준(교육비·생활관비·식비 등)", "모집(2026 기준): 일반 64 · 지역우수 20(가평군 소재) · 사회통합 20 = 104명", "지원 지역: 경기 소재 중학교, 국제고가 없는 시·도 중학교 (서울·인천·부산·대구·세종 등은 지원 불가)", "1단계: 영어 내신 160점 − 출결 감점 → 2배수 (2026은 모든 전형이 2배수 미만이라 1단계 전원 합격)", "2단계: 1단계 160 + 면접 40(자기주도학습 30 · 인성 10), 자소서·학생부 기반 개별 면접"], "py": "", "past": []}, {"id": "hafs", "n": "용인외대부고", "g": "aut", "sub": "자율형사립고", "yo": "https://admission.hafs.hs.kr/?act=board.read&code=1415&id=85", "home": "https://www.hafs.hs.kr", "fmt": ["창의융합 면접(공통 + 개별): 20분 준비 → 10분 면접", "인성·독서 면접(공통 + 개별): 10분 준비 → 10분 면접", "제시된 자료를 읽고 준비 시간을 가진 뒤, 공통 문항 답변 후 개별 문항이 나와요."], "jh": [], "py": "", "past": []}, {"id": "dongsan", "n": "안산동산고", "g": "aut", "sub": "자율형사립고", "yo": "https://ansandongsan-h.goeas.kr/ansandongsan-h/na/ntt/selectNttList.do?mi=10187&bbsId=5169", "home": "https://ansandongsan-h.goeas.kr", "fmt": [], "jh": [], "py": "", "past": []}, {"id": "minjok", "n": "민족사관고", "g": "aut", "sub": "자율형사립고", "yo": "https://www.minjok.hs.kr/sub04/sub02_1", "home": "https://www.minjok.hs.kr", "fmt": [], "jh": [], "py": "", "past": []}, {"id": "sangsan", "n": "상산고", "g": "aut", "sub": "자율형사립고", "yo": "https://school.jbedu.kr/sangsan/M010403/index.do", "home": "https://school.jbedu.kr/sangsan", "fmt": ["공통 문항: 사회 현상·시사·인문학적 가치·융합적 사고력을 묻는 제시문 기반 질문", "개별 문항: 서류 기반 3~5개(학습 과정·진학 동기·입학 후 계획·인성·독서·자기주도학습)", "면접관 2인, 창의융합 20분 준비 + 10분 답변, 독서인성 10분 준비 + 10분 답변", "창의융합 문제는 풀이 과정을 설명하게 하고, 못 푼 문제는 힌트를 주며 다시 풀게 해요."], "jh": [], "py": "", "past": []}, {"id": "bugil", "n": "천안북일고", "g": "aut", "sub": "자율형사립고", "yo": "https://www.bugil.hs.kr/admission/guideline.php", "home": "https://www.bugil.hs.kr", "fmt": ["면접 대기실에 자기소개서·필기구 지참 가능", "면접실에서 질문지로 2문항 제시, 문항별 첫 발언 최대 5분 · 추가 질문 포함 문항당 최대 8분"], "jh": [], "py": "", "past": []}, {"id": "gimcheon", "n": "김천고", "g": "aut", "sub": "자율형사립고", "yo": "https://school.gyo6.net/gimcheon/na/ntt/selectNttList.do?mi=125884&bbsId=33427", "home": "https://school.gyo6.net/gimcheon", "fmt": ["공통 1문항 + 개별 2~3문항, 면접 총 5분 (면접실 2곳)", "공통 문항은 5분 구상 시간(필기구 사용 불가), 개별 문항은 면접실에서 질문지를 읽고 바로 답해요."], "jh": [], "py": "", "past": []}];
-var GROUPS = [["fl","외국어고"],["intl","국제고"],["aut","자율형사립고"]];
-var FMT = {
-  fl:["자기소개서·학교생활기록부를 바탕으로 한 개별 면접이에요.","자기주도학습 영역(공부 방법·지원 동기·진로 계획)과 인성 영역을 평가해요.","경기 외고·국제고 공통: 1단계 영어 내신 160점(출결 감점) → 2단계 1단계 점수 + 면접 40점."],
-  intl:["자기소개서·학교생활기록부를 바탕으로 한 개별 면접이에요.","자기주도학습 영역과 인성 영역을 평가해요.","경기 외고·국제고 공통: 1단계 영어 내신 160점(출결 감점) → 2단계 1단계 점수 + 면접 40점."],
-  aut:["보통 1단계 내신(+출결) → 2단계 서류·면접으로 뽑아요.","자기소개서·학생부 기반 개별 면접에, 학교에 따라 제시문을 읽고 답하는 공통 문항이 더해져요.","전국·광역 모집 여부와 학비·기숙사비는 요강에서 확인해요."],
-  mei:["보통 1차 서류(내신·출결 등) → 2차 면접·인적성(학교별)으로 뽑아요.","면접에서는 학과 선택 이유, 성실성, 인성, 회사·학교생활 상황 판단을 주로 물어요.","마이스터고는 1개교만 지원할 수 있고, 합격하면 일반고에 지원할 수 없어요."],
-  voc:["진로적성(취업희망자) 특별전형은 자기소개서(진로희망서)와 면접을 봐요.","보통 1차 서류(내신·출결 등) → 2차 면접이에요.","면접에서는 학과(1·2지망)를 고른 이유와 졸업 후 진로를 주로 물어요."]
-};
-function Q(t,tails){ return {t:t, tails:tails||[]}; }
-var ACAD = {
-  "자기주도":[
-    Q("자기소개서에 쓴 공부 방법을 다시 설명해 볼까요?",["그 방법이 잘 통하지 않은 과목은 무엇이었나요?","다시 한다면 무엇을 바꾸겠어요?"]),
-    Q("계획대로 공부가 되지 않았을 때 어떻게 방법을 바꿨나요?",["바꾼 뒤 무엇이 달라졌나요?","고등학교에서는 그 경험을 어떻게 활용할 건가요?"]),
-    Q("가장 좋아하는 과목과, 그 과목을 공부하는 나만의 방법은?",["반대로 가장 어려운 과목은 어떻게 공부하나요?"]),
-    Q("스스로 목표를 세워 끝까지 해낸 경험을 말해 보세요.",["중간에 포기하고 싶었던 순간은 없었나요?","그 경험에서 배운 점은 무엇인가요?"])],
-  "지원동기·진로":[
-    Q("우리 학교에 지원한 이유는 무엇인가요?",["다른 학교가 아니라 꼭 우리 학교여야 하는 이유는?","우리 학교의 어떤 교육과정을 알고 있나요?"]),
-    Q("입학하면 가장 해 보고 싶은 활동은 무엇인가요?",["그 활동이 진로와 어떻게 이어지나요?"]),
-    Q("졸업 후 진로 계획과 그 꿈을 갖게 된 계기는?",["꿈이 바뀐다면 어떻게 하겠어요?"]),
-    Q("진로를 위해 중학교에서 해 온 활동을 말해 보세요.",["그 활동에서 가장 아쉬웠던 점은?"])],
-  "인성":[
-    Q("친구와 의견이 달랐을 때 어떻게 해결했나요?",["끝까지 의견이 좁혀지지 않았다면 어떻게 했을까요?"]),
-    Q("학급이나 동아리에서 다른 사람을 도운 경험은?",["그 일로 내가 달라진 점은 무엇인가요?"]),
-    Q("기숙사·공동체 생활에서 가장 중요하게 지켜야 할 것은?",["규칙을 어기는 친구가 있다면 어떻게 하겠어요?"]),
-    Q("모둠 활동에 거의 참여하지 않는 친구가 있다면 어떻게 하겠어요?",["그래도 참여하지 않는다면요?"])]
-};
-var EXTRA = {
-  fl:Q("전공 외국어를 입학 후 어떻게 공부할 계획인가요?",["그 외국어를 진로에 어떻게 활용할 건가요?"]),
-  intl:Q("요즘 관심 있게 본 국제 문제 하나와 그에 대한 내 생각은?",["그 문제를 해결하려면 무엇이 필요할까요?"]),
-  aut:Q("가치관 형성에 영향을 준 책과, 그 가치를 실천한 경험은?",["그 책의 주장에 반대하는 의견이 있다면?"])
-};
-var JOB = {
-  "학과·진로":[
-    Q("이 학과를 1지망으로 고른 이유는 무엇인가요?",["2지망 학과에 배정된다면 어떻게 하겠어요?"]),
-    Q("졸업 후 하고 싶은 일과 따고 싶은 자격증은?",["그 자격증을 위해 지금 준비하고 있는 것은?"]),
-    Q("대학 진학보다 취업을 먼저 선택한 이유는?",["나중에 공부를 더 하고 싶어지면 어떻게 하겠어요?"]),
-    Q("졸업하고 10년 뒤 나는 어떤 모습일까요?",["그 모습이 되기 위해 고등학교 3년 동안 할 일은?"])],
-  "회사생활":[
-    Q("취업 후 경쟁회사에서 더 높은 연봉을 제시하며 이직을 권유한다면 어떤 선택을 하겠어요?",["지금 회사가 나를 키워 준 회사라면 달라지나요?"]),
-    Q("선배가 알려 준 작업 방식이 내 생각에는 비효율적으로 보인다면 어떻게 하겠어요?",["선배가 내 의견을 받아들이지 않는다면요?"]),
-    Q("동료가 작은 안전 규칙을 자주 어기는 것을 보았다면 어떻게 하겠어요?",["그 동료가 친한 선배라면요?"]),
-    Q("내가 만든 부품에 작은 실수가 있다는 것을 나만 알고 있다면 어떻게 하겠어요?",["말하면 내가 혼날 수 있다면요?"])],
-  "학교생활":[
-    Q("전공 실습이 생각보다 힘들고 흥미가 떨어진다면 어떻게 이겨 내겠어요?",["그래도 맞지 않는다고 느끼면요?"]),
-    Q("조별 실습에서 한 친구가 거의 참여하지 않는다면 어떻게 하겠어요?",["선생님께 말씀드려야 할 때는 언제일까요?"]),
-    Q("친구가 실습 과제를 대신 해 달라고 부탁한다면?",["거절했더니 친구가 서운해한다면요?"])],
-  "인성":[
-    Q("친구들과 협력해서 문제를 해결했던 경험을 말해 보세요.",["그때 내 역할은 무엇이었나요?"]),
-    Q("나의 장점과 보완하고 싶은 점은 무엇인가요?",["보완하기 위해 실제로 하고 있는 노력은?"])]
-};
-var TIP = {
-  "자기주도":"<b>답변 틀</b> 결론(나의 방법) → 계기와 과정(언제·무엇을·어떻게) → 결과와 배운 점 → 입학 후 적용.",
-  "지원동기·진로":"<b>답변 틀</b> 결론(지원 이유 한 문장) → 나의 관심·경험 → 이 학교의 교육과정·프로그램과 연결 → 입학 후 계획.",
-  "인성":"<b>답변 틀</b> 상황 → 나의 행동과 판단 → 공동체의 변화 → 달라진 나의 태도. 나를 설명하지 말고 일화로 보여 주세요.",
-  "학과·진로":"<b>답변 틀</b> 결론(학과·진로) → 관심을 갖게 된 경험 → 학교에서 배울 것·자격증 → 졸업 후 계획.",
-  "회사생활":"<b>답변 틀</b> 내 선택을 먼저 → 이유 두 가지 → 회사·동료 입장도 생각했음을 보여 주기 → 비슷한 경험. 정답보다 소신과 논리가 중요해요.",
-  "학교생활":"<b>답변 틀</b> 결론 → 이유 → 학교·기숙사 생활에서라면 어떻게 할지 구체적으로.",
-  "기출":"<b>기출 문항</b> 지원자 후기를 바탕으로 한 문항이에요. 제시문형은 먼저 내 판단을 말하고, 근거 → 반론 → 재반론 순서로 정리해 보세요."
-};
-var DEF_TAIL = ["그렇게 생각한 근거를 하나 더 말해 볼까요?","그 경험에서 무엇이 달라졌나요?","다시 한다면 어떻게 하겠어요?"];
-
-var $ = function(id){ return document.getElementById(id); };
-var store = { get:function(k,d){ try{ var v=localStorage.getItem('mi:'+k); return v==null?d:JSON.parse(v); }catch(e){ return d; } },
-              set:function(k,v){ try{ localStorage.setItem('mi:'+k, JSON.stringify(v)); }catch(e){} } };
-var cur = { g:'fl', s:null, cat:null, i:0, list:[] };
-
-function bank(sc){
-  var job = sc.g==='mei' || sc.g==='voc', b = {}, k;
-  if(sc.past && sc.past.length){ b["기출"] = sc.past.map(function(t){ return Q(t.replace(/^\[[^\]]+\]\s*/,''), []); }); b["기출"].forEach(function(q,i){ var m=sc.past[i].match(/^\[([^\]]+)\]/); q.tag=m?m[1]:''; }); }
-  var src = job ? JOB : ACAD;
-  for(k in src) b[k] = src[k].slice();
-  if(!job && EXTRA[sc.g]) b["지원동기·진로"] = b["지원동기·진로"].concat([EXTRA[sc.g]]);
-  return b;
-}
+function $(id){ return document.getElementById(id); }
 function esc(t){ var d=document.createElement('div'); d.textContent=t; return d.innerHTML; }
-
-function renderGroups(){
-  $('groups').innerHTML = GROUPS.map(function(g){ var n=S.filter(function(s){return s.g===g[0];}).length;
-    return '<button type="button" class="grp" data-g="'+g[0]+'" aria-pressed="'+(cur.g===g[0])+'">'+g[1]+'<small>'+n+'교</small></button>'; }).join('');
-  [].forEach.call($('groups').children,function(b){ b.onclick=function(){ cur.g=b.dataset.g; renderGroups(); var f=S.filter(function(s){return s.g===cur.g;})[0]; pick(f.id); }; });
-}
-function renderSchools(){
-  var done = store.get('done',{});
-  $('schools').innerHTML = S.filter(function(s){return s.g===cur.g;}).map(function(s){
-    var rich = (s.fmt.length||s.past.length) ? '<span class="dot" title="학교별 면접 자료 있음"></span>' : '';
-    var d = done[s.id] ? ' · 연습 '+done[s.id]+'문항' : '';
-    return '<button type="button" class="sch" data-id="'+s.id+'" aria-pressed="'+(cur.s&&cur.s.id===s.id)+'"><span>'+esc(s.n)+rich+'</span><small>'+esc(s.sub.split(' · ')[0])+d+'</small></button>'; }).join('');
-  [].forEach.call($('schools').children,function(b){ b.onclick=function(){ pick(b.dataset.id); }; });
-}
-function pick(id){
-  var sc = S.filter(function(s){return s.id===id;})[0]; if(!sc) return;
-  cur.s = sc; cur.g = sc.g; store.set('last', id);
-  try{ history.replaceState(null,'',location.pathname+location.search+'#'+id); }catch(e){}
-  renderGroups(); renderSchools();
-  $('sType').textContent = sc.sub; $('sName').textContent = sc.n;
-  var own = sc.fmt.length>0;
-  $('sFmt').innerHTML = (own ? sc.fmt : FMT[sc.g]).map(function(t){return '<li>'+esc(t)+'</li>';}).join('');
-  $('sJhBox').hidden = !sc.jh.length; $('sJh').innerHTML = sc.jh.map(function(t){return '<li>'+esc(t)+'</li>';}).join('');
-  $('sPastBox').hidden = !sc.past.length; $('sPastBox').open = false;
-  $('sPastT').textContent = '면접 기출 문항 '+sc.past.length+'개 · '+sc.py;
-  $('sPast').innerHTML = sc.past.map(function(t){return '<li>'+esc(t)+'</li>';}).join('');
-  
-  $('sLinks').innerHTML = '<a class="lbtn pri" href="'+sc.yo+'" target="_blank" rel="noopener">입학요항·입학안내 ↗</a><a class="lbtn" href="'+sc.home+'" target="_blank" rel="noopener">학교 홈페이지 ↗</a>';
-  $('sSrc').textContent = own ? '면접 방식: 2026학년도 입학생 기준 진로상담실 보충 자료' : '이 학교는 학교별 면접 자료가 아직 없어 같은 유형 학교의 공통 안내를 보여 줘요. 면접 방식은 입학요항에서 확인하세요.';
-  var b = bank(sc); cur.bank = b;
-  var cats = Object.keys(b); cur.cat = cats[0];
-  $('cats').innerHTML = cats.map(function(c){ return '<button type="button" data-c="'+c+'" aria-pressed="false">'+c+'<small>'+b[c].length+'</small></button>'; }).join('');
-  [].forEach.call($('cats').children,function(x){ x.onclick=function(){ setCat(x.dataset.c); }; });
-  setCat(cur.cat);
-}
-function setCat(c){
-  cur.cat=c; cur.list=cur.bank[c].slice(); cur.i=0;
-  [].forEach.call($('cats').children,function(x){ x.setAttribute('aria-pressed', String(x.dataset.c===c)); });
-  $('tip').innerHTML = TIP[c] || TIP["자기주도"];
-  showQ();
+var store={ get:function(k,d){ try{ var v=localStorage.getItem('mock4_'+k); return v?JSON.parse(v):d; }catch(e){ return d; } },
+            set:function(k,v){ try{ localStorage.setItem('mock4_'+k,JSON.stringify(v)); }catch(e){} } };
+var SAMPLE=["간단하게 자기소개를 해 보세요.","우리 학교에 지원한 이유는 무엇인가요?","자기소개서에 쓴 공부 방법을 다시 설명해 볼까요?","계획대로 공부가 되지 않았을 때 어떻게 방법을 바꿨나요?","입학하면 가장 해 보고 싶은 활동은 무엇인가요?","졸업 후 진로 계획과 그 꿈을 갖게 된 계기는?","친구와 의견이 달랐을 때 어떻게 해결했나요?","공동체를 위해 양보하거나 배려한 경험을 말해 보세요.","마지막으로 하고 싶은 말이 있나요?"];
+var Qs=store.get('qs',[]), cur=0, answered=false;
+function save(){ store.set('qs',Qs); }
+function renderList(){
+  $('qCount').textContent=Qs.length+'문항'; $('qEmpty').hidden=Qs.length>0;
+  $('qList').innerHTML=Qs.map(function(q,i){ return '<li><button type="button" data-i="'+i+'" aria-current="'+(i===cur)+'"><span>'+esc(q)+'</span><span class="x" data-del="'+i+'" title="이 문제 지우기" aria-label="'+(i+1)+'번 문제 지우기">✕</span></button></li>'; }).join('');
+  [].forEach.call($('qList').querySelectorAll('button'),function(b){ b.onclick=function(e){
+    var d=e.target.getAttribute('data-del');
+    if(d!==null){ Qs.splice(+d,1); if(cur>=Qs.length) cur=Math.max(0,Qs.length-1); save(); renderList(); showQ(); return; }
+    markDone(); cur=+b.dataset.i; showQ(); }; });
 }
 function showQ(){
-  var q = cur.list[cur.i];
-  $('qCat').textContent = cur.cat==='기출' && q.tag ? '기출 · '+q.tag : cur.cat;
-  $('qTxt').textContent = q.t; $('vQ').textContent = q.t;
-  $('qPos').textContent = (cur.i+1)+' / '+cur.list.length;
-  $('tail').innerHTML = (q.tails.length?q.tails:DEF_TAIL).map(function(t){return '<li>'+esc(t)+'</li>';}).join('');
-  var memos = store.get('memo',{}); $('memo').value = memos[key()]||''; countMemo();
+  var has=Qs.length>0;
+  $('qTxt').textContent=has?Qs[cur]:'문제를 넣으면 여기에 질문이 나와요.';
+  $('qPos').textContent=has?(cur+1)+' / '+Qs.length:'';
+  if($('vQ')) $('vQ').textContent=has?Qs[cur]:'';
+  $('next').disabled=!has; $('shuffle').disabled=Qs.length<2; $('tStart').disabled=!has;
+  [].forEach.call($('qList').querySelectorAll('button'),function(b){ b.setAttribute('aria-current',String(+b.dataset.i===cur)); });
+  var memos=store.get('memo',{}); $('memo').value=has?(memos[Qs[cur]]||''):''; countMemo();
   [].forEach.call(document.querySelectorAll('#chk input'),function(x){ x.checked=false; }); score();
   resetTimer();
 }
-function key(){ return cur.s.id+'|'+cur.cat+'|'+cur.list[cur.i].t.slice(0,24); }
-function countMemo(){ $('memoCnt').textContent = $('memo').value.replace(/\s/g,'').length+'자'; }
-$('memo').addEventListener('input',function(){ countMemo(); var m=store.get('memo',{}); m[key()]=$('memo').value; store.set('memo',m); });
+function addLines(lines){
+  var n=0; lines.forEach(function(t){ t=t.replace(/^\s*(\d+[.)]|[-•·*]|Q\d*[.:)]?)\s*/,'').trim(); if(t&&Qs.indexOf(t)<0){ Qs.push(t); n++; } });
+  save(); renderList(); return n;
+}
+$('qAdd').onclick=function(){ var lines=$('qIn').value.split(/\n/); var n=addLines(lines);
+  $('qMsg').textContent=n?n+'문항을 넣었어요. 오른쪽에서 연습을 시작하세요.':'새로 넣을 문제가 없어요. 한 줄에 한 문제씩 적어 주세요.'; if(n){ $('qIn').value=''; if(Qs.length===n) cur=0; showQ(); } };
+$('qSample').onclick=function(){ var n=addLines(SAMPLE); $('qMsg').textContent=n?'기본 질문 '+n+'문항을 넣었어요. 내 예상 문제도 함께 넣어 보세요.':'기본 질문은 이미 들어 있어요.'; showQ(); };
+var armed=false;
+$('qClear').onclick=function(){ if(!Qs.length) return; if(!armed){ armed=true; $('qClear').textContent='정말 비울까요?'; setTimeout(function(){ armed=false; $('qClear').textContent='목록 비우기'; },3000); return; }
+  armed=false; $('qClear').textContent='목록 비우기'; Qs=[]; cur=0; save(); renderList(); showQ(); $('qMsg').textContent='목록을 비웠어요.'; };
+function countMemo(){ $('memoCnt').textContent=$('memo').value.replace(/\s/g,'').length+'자'; }
+$('memo').addEventListener('input',function(){ countMemo(); if(!Qs.length) return; var m=store.get('memo',{}); m[Qs[cur]]=$('memo').value; store.set('memo',m); });
 function score(){ var n=document.querySelectorAll('#chk input:checked').length; $('score').textContent=n+' / 5'; }
 $('chk').addEventListener('change',score);
-$('next').onclick=function(){ markDone(); cur.i=(cur.i+1)%cur.list.length; showQ(); };
-$('shuffle').onclick=function(){ markDone(); var all=[]; Object.keys(cur.bank).forEach(function(c){ cur.bank[c].forEach(function(q){ all.push([c,q]); }); });
-  var r=all[Math.floor(Math.random()*all.length)]; cur.cat=r[0]; cur.list=cur.bank[r[0]].slice(); cur.i=cur.list.indexOf(r[1]);
-  [].forEach.call($('cats').children,function(x){ x.setAttribute('aria-pressed', String(x.dataset.c===cur.cat)); }); $('tip').innerHTML=TIP[cur.cat]||''; showQ(); };
-var answered=false;
-function markDone(){ if(!answered) return; answered=false; var d=store.get('done',{}); d[cur.s.id]=(d[cur.s.id]||0)+1; store.set('done',d);
-  $('done').textContent = cur.s.n+' 연습 '+d[cur.s.id]+'문항째예요.'; renderSchools(); }
-/* 타이머: 생각 30초 → 답변 */
-var tm=null, left=30, mode='think';
+var bag=[];
+$('next').onclick=function(){ if(!Qs.length) return; markDone(); cur=(cur+1)%Qs.length; showQ(); };
+$('shuffle').onclick=function(){ if(Qs.length<2) return; markDone();
+  if(!bag.length){ bag=Qs.map(function(_,i){return i;}).filter(function(i){return i!==cur;}); }
+  var k=Math.floor(Math.random()*bag.length); cur=bag.splice(k,1)[0]; if(cur>=Qs.length) cur=0; showQ(); };
+function markDone(){ if(!answered) return; answered=false; var d=store.get('done',0)+1; store.set('done',d); $('done').textContent='지금까지 '+d+'문항 연습했어요.'; }
+/* 타이머: 생각 시간(선택) → 답변 시간(선택) */
+var tm=null, left=0, mode='think';
 function fmt(s){ var m=Math.floor(s/60), r=s%60; return (m<10?'0':'')+m+':'+(r<10?'0':'')+r; }
-function paint(){ $('tm').textContent=fmt(left); $('tm').classList.toggle('warn', left<=10); }
-function resetTimer(){ clearInterval(tm); tm=null; mode='think'; left=30; paint();
-  $('phase').textContent='생각 30초 → 답변 '+fmt(+$('ansLen').value); $('tStart').textContent='생각 30초 시작'; $('tStart').disabled=false; }
-$('ansLen').onchange=resetTimer;
-$('tReset').onclick=resetTimer;
-function tick(){ left--; paint();
-  if(left>0) return;
-  clearInterval(tm); tm=null;
-  if(mode==='think'){ mode='answer'; left=+$('ansLen').value; paint(); $('phase').textContent='답변하세요! 결론부터'; tm=setInterval(tick,1000); if(window.__onAnswerStart) window.__onAnswerStart(); }
-  else { if(window.__onAnswerEnd) window.__onAnswerEnd(); $('phase').textContent='끝! 셀프 체크를 해 보세요'; $('tStart').disabled=false; $('tStart').textContent='다시 시작'; mode='think'; left=30; answered=true; }
-}
-$('tStart').onclick=function(){
-  if(tm) return;
-  $('phase').textContent='생각하는 중… 메모해도 좋아요';
-  $('tStart').disabled=true; tm=setInterval(tick,1000);
-};
+function paint(){ $('tm').textContent=fmt(left); $('tm').classList.toggle('warn', left<=10 && mode==='answer'); }
+function th(){ return +$('thinkLen').value; } function an(){ return +$('ansLen').value; }
+function resetTimer(){ clearInterval(tm); tm=null; mode=th()?'think':'answer'; left=th()||an(); paint();
+  $('phase').textContent=(th()?'생각 '+fmt(th())+' → ':'바로 ')+'답변 '+fmt(an());
+  $('tStart').textContent=th()?'생각 시간 시작':'답변 시작'; $('tStart').disabled=!Qs.length; }
+$('ansLen').onchange=resetTimer; $('thinkLen').onchange=resetTimer; $('tReset').onclick=resetTimer;
+function toAnswer(){ mode='answer'; left=an(); paint(); $('phase').textContent='답변하세요! 결론부터'; if(window.__onAnswerStart) window.__onAnswerStart(); }
+function tick(){ left--; paint(); if(left>0) return;
+  if(mode==='think'){ toAnswer(); return; }
+  clearInterval(tm); tm=null; if(window.__onAnswerEnd) window.__onAnswerEnd();
+  $('phase').textContent='끝! 셀프 체크를 해 보세요'; $('tStart').disabled=false; $('tStart').textContent='다시 시작'; answered=true; mode=th()?'think':'answer'; }
+$('tStart').onclick=function(){ if(tm||!Qs.length) return;
+  if(mode==='think'){ left=th(); paint(); $('phase').textContent='생각하는 중… 메모해도 좋아요'; } else { toAnswer(); }
+  $('tStart').disabled=true; tm=setInterval(tick,1000); };
 /* 노트북 카메라 녹화 → 바로 다시 보기 */
 var stream=null, recr=null, chunks=[], blobUrl=null, recBlob=null, recT=null, recS=0;
 function vmsg(t){ $('recMsg').textContent=t||''; }
@@ -407,7 +322,7 @@ $('recStart').onclick=recStart; $('recStop').onclick=recStop;
 $('recAgain').onclick=function(){ $('vPlay').pause(); vshow('live'); $('recStart').hidden=false; $('recAgain').hidden=true; $('recSave').hidden=true; vmsg('다시 찍을 준비가 됐어요.'); };
 var DLV=null; if(window.claude&&claude.use){ claude.use('downloads').then(function(d){ DLV=d; }).catch(function(){}); }
 $('recSave').onclick=function(){ if(!recBlob) return; var ext=(recBlob.type.indexOf('mp4')>-1)?'mp4':'webm';
-  var name='모의면접_'+(cur.s?cur.s.n:'')+'_'+new Date().toISOString().slice(0,10)+'.'+ext;
+  var name='모의면접_'+new Date().toISOString().slice(0,10)+'.'+ext;
   if(DLV){ DLV.save({filename:name,data:recBlob}).then(function(){ vmsg('영상을 저장했어요.'); }).catch(function(e){ vmsg(e&&e.code==='declined'?'저장을 취소했어요.':'영상을 저장하지 못했어요.'); }); return; }
   var a=document.createElement('a'); a.href=blobUrl; a.download=name; document.body.appendChild(a); a.click(); a.remove(); vmsg('영상을 다운로드 폴더에 저장했어요.'); };
 /* 답변 타이머와 자동 녹화 연결 */
@@ -423,7 +338,7 @@ var LV=[["2","잘함"],["1","보통"],["0","보완"]];
   box.setAttribute('role','group'); box.setAttribute('aria-label',li.querySelector('b').textContent+' 평가');
   [].forEach.call(box.children,function(b){ b.onclick=function(){ var on=b.getAttribute('aria-pressed')!=='true'; [].forEach.call(box.children,function(x){ x.setAttribute('aria-pressed','false'); }); b.setAttribute('aria-pressed',String(on)); fbScore(); }; }); });
 function fbScore(){ var n=0,t=0; [].forEach.call(document.querySelectorAll('#fb .lv button[aria-pressed="true"]'),function(b){ n++; t+=+b.dataset.v; }); $('fbScore').textContent=n?('잘함 '+document.querySelectorAll('#fb .lv button[aria-pressed="true"][data-v="2"]').length+' / '+n+'항목'):''; }
-function fbText(){ var lines=['[모의면접 피드백] '+(cur.s?cur.s.n:'')+' · '+new Date().toLocaleDateString('ko-KR'),'질문: '+$('qTxt').textContent];
+function fbText(){ var lines=['[모의면접 피드백] '+new Date().toLocaleDateString('ko-KR'),'질문: '+$('qTxt').textContent];
   [].forEach.call(document.querySelectorAll('#fb li'),function(li){ var on=li.querySelector('button[aria-pressed="true"]'); lines.push('- '+li.querySelector('b').textContent+': '+(on?on.textContent:'-')); });
   if($('fbMemo').value.trim()) lines.push('메모: '+$('fbMemo').value.trim()); return lines.join('\n'); }
 $('fbCopy').onclick=function(){ var t=fbText();
@@ -431,24 +346,8 @@ $('fbCopy').onclick=function(){ var t=fbText();
   catch(e){ $('fbMemo').value=t; $('fbMemo').select(); $('fbMsg').textContent='메모 칸에 정리했어요. 선택된 글을 복사하세요.'; } };
 $('fbClear').onclick=function(){ [].forEach.call(document.querySelectorAll('#fb .lv button'),function(b){ b.setAttribute('aria-pressed','false'); }); $('fbMemo').value=''; fbScore(); $('fbMsg').textContent='피드백을 지웠어요.'; };
 
-/* 보기 탭과 HTML 파일 받기 */
-(function(){ var t1=$('vt1'), t2=$('vt2'); if(!t1) return;
-  function view(dl){ t1.setAttribute('aria-selected',String(!dl)); t2.setAttribute('aria-selected',String(dl)); $('viewDl').hidden=!dl; $('viewPractice').hidden=dl; }
-  t1.onclick=function(){ view(false); }; t2.onclick=function(){ view(true); };
-  var DL=null; if(window.claude&&claude.use){ claude.use('downloads').then(function(d){ DL=d; }).catch(function(){}); }
-  $('dlBtn').onclick=function(){ var b=this, m=$('dlMsg');
-    if(!DL){ m.textContent='이 화면에서는 바로 저장할 수 없어요. "새 창에서 파일 열기"를 누른 뒤 Ctrl+S로 저장하세요.'; return; }
-    b.disabled=true; m.textContent='파일을 준비하고 있어요…';
-    fetch('goip-interview.html').then(function(r){ if(!r.ok) throw new Error('f'); return r.blob(); })
-      .then(function(x){ m.textContent='저장 창에서 확인을 눌러 주세요.'; return DL.save({filename:'고입_모의면접기.html', data:new Blob([x],{type:'text/html'})}); })
-      .then(function(){ m.textContent='저장했어요. 받은 파일을 그대로 전해 주면 돼요.'; })
-      .catch(function(e){ var c=e&&e.code; m.textContent = c==='declined'?'저장을 취소했어요.':(c==='rate_limited'?'잠시 뒤 다시 눌러 주세요.':'저장하지 못했어요. "새 창에서 파일 열기" 후 Ctrl+S로 저장하세요.'); })
-      .then(function(){ b.disabled=false; });
-  };
-})();
-var h=(location.hash||'').slice(1), start=S.filter(function(s){return s.id===h;})[0] ? h : store.get('last','suwonfl');
-if(!S.filter(function(s){return s.id===start;})[0]) start='suwonfl';
-pick(start);
+
+renderList(); showQ();
 })();
 </script>
 
